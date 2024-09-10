@@ -22,9 +22,9 @@
             <div class="form-group">
                 <label for="version">Bible Translation</label>
                 <select id="version" class="form-control" required="required">
-                    <option value="ESV">ESV - English Standard Version</option>
+                    <option value="ESV" selected="selected">ESV - English Standard Version</option>
                     <option value="NIV">NIV - New International Version</option>
-                    <option value="NKJV" selected="selected">NKJV - New King James Version</option>
+                    <option value="NKJV">NKJV - New King James Version</option>
                     <option value="KJV">KJV - King James Version</option>
                     <option value="NASB">NASB - New American Standard Bible</option>
                 </select>
@@ -32,9 +32,9 @@
             <div class="form-group">
                 <label for="division">Division</label>
                 <select id="division" class="form-control" required="required">
-                    <option selected="selected">Senior</option>
-                    <option>Junior</option>
-                    <option>Primary</option>
+                    <option selected="selected" value="Senior">Senior</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Primary">Primary</option>
                 </select>
             </div>
             <div id="speech_rate_group" class="form-group">
@@ -62,5 +62,34 @@
         </div>
     </div>
     </div>
+    <script>
+        // save version to local storage
+        var version = localStorage.getItem("version")
+        var versionSelector = document.querySelector("#version")
+        if (version) {
+            for (let i = 0; i < versionSelector.options.length; i++) {
+                if (versionSelector.options[i].value == version) {
+                    versionSelector.options[i].selected = true
+                }
+            }
+        }
+        versionSelector.addEventListener("change", () => {
+            localStorage.setItem("version", versionSelector.value)
+        })
+
+        // save division to local storage
+        var division = localStorage.getItem("division")
+        var divisionSelector = document.querySelector("#division")
+        if (division) {
+            for (let i = 0; i < divisionSelector.options.length; i++) {
+                if (divisionSelector.options[i].value == division) {
+                    divisionSelector.options[i].selected = true
+                }
+            }
+        }
+        divisionSelector.addEventListener("change", () => {
+            localStorage.setItem("division", divisionSelector.value)
+        })
+    </script>
 </body>
 </html>
