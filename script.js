@@ -89,7 +89,7 @@
 
         $.ajax({
             dataType: 'json',
-            url: `2023/${division.toLowerCase()}-${version.toLowerCase()}.json`,
+            url: `2024/${division.toLowerCase()}-${version.toLowerCase()}.json`,
         }).done(function (passages) {
             console.log(`received ${passages.length} passages`);
             let max_words = Number(valueOf($('#max_words')));
