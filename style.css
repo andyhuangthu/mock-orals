@@ -284,6 +284,7 @@ div.container-fluid > div {
 }
 
 #passages {
+    margin: 0px auto;
     padding: 20px 0;
 }
 
