@@ -3,7 +3,7 @@
     box-sizing: border-box;
 }
 
-.cache-reload {
+.cache-reload-p {
     display: none;
 }
 
@@ -167,6 +167,10 @@ div.container-fluid > div {
 }
 
 #generator {
+    max-width: 300px;
+}
+
+#generator2 {
     position: fixed;
     left: 50%;
     top: 50%;

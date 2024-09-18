@@ -79,7 +79,7 @@
         $('#generate').click(function () {
             this.disabled = true;
             generatePassages();
-            $('#generator').css('display', 'none');
+            $('#generator2').css('display', 'none');
             $('#curtain').css('display', 'none');
         });
 
@@ -95,7 +95,7 @@
 
         $.ajax({
             dataType: 'json',
-            url: `../json/${division.toLowerCase()}-${version.toLowerCase()}.json`,
+            url: `/mock-orals/2024/${division.toLowerCase()}-${version.toLowerCase()}.json`,
         }).done(function (passages) {
             console.log(`received ${passages.length} passages`);
             let max_words = Number(valueOf($('#max_words')));

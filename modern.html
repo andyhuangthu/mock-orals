@@ -18,25 +18,25 @@
 
 <body></body>
     
-    <p class="cache-reload">
+    <p class="cache-reload-p">
         You should not be seeing this message! If you are, the browser has cached this website and newer updates will not appear. To see the updated version, do a hard reload of this page as outlined below.
     </p>
-    <p class="cache-reload">
+    <p class="cache-reload-p">
         <b>Chrome:</b>
         Option 1: Hold down Ctrl and click the Reload button (Windows) or Shift and click the Reload button (Mac)
         Option 2: Hold down Ctrl and press F5 (Windows) or Cmd and Shift and R (Mac)
     </p>
-    <p class="cache-reload">
+    <p class="cache-reload-p">
         <b>Firefox:</b>
         Option 1: Hold Ctrl and press the F5 key (Windows) or Shift and click the Reload button (Mac)
         Option 2: Hold down Ctrl and Shift and R (Windows) or Cmd and Shift and R (Mac)
     </p>
-    <p class="cache-reload">
+    <p class="cache-reload-p">
         <b>Internet Explorer:</b>
         Option 1: Hold Ctrl and press the F5 key
         Option 2: Hold the Ctrl key and click the Refresh button.
     </p>
-    <p class="cache-reload">
+    <p class="cache-reload-p">
         <b>Safari:</b>
         Press Shift and click the Reload button
     </p>
@@ -57,7 +57,7 @@
     </div>
     <div id="content-ctr" class="container-fluid">
     <div id="content">
-        <div id="generator" class="form-horizontal">
+        <div id="generator2" class="form-horizontal">
             <h2 class="text-center">Passage Settings</h2>
             <div class="form-group">
                 <label for="classic-view">Classic</label>
@@ -162,7 +162,7 @@
 
         // close settings
         const closeGenerator = document.querySelector("#close")
-        const generator = document.querySelector("#generator")
+        const generator = document.querySelector("#generator2")
         const curtain = document.querySelector("#curtain")
         closeGenerator.addEventListener("click", () => {
             generator.style.display = "none"
