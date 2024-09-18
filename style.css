@@ -1,5 +1,20 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
 input.wpm {
     width: 4em !important;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
 }
 
 div.container-fluid {
@@ -10,8 +25,254 @@ div.container-fluid > div {
     max-width: 600px;
 }
 
+#curtain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0002;
+    z-index: 10;
+}
+
+@keyframes optionbar-appear {
+    0% {
+        height: 0px;
+        padding: 0px;
+        opacity: 0;
+    }
+    100% {
+        height: 80px;
+        padding: 15px;
+        opacity: 1;
+    }
+}
+
+@keyframes optionbar-disappear {
+    0% {
+        height: 80px;
+        padding: 15px;
+        opacity: 1;
+    }
+    100% {
+        height: 0px;
+        padding: 0px;
+        opacity: 0;
+    }
+}
+
+#optionbar {
+    display: block;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0px 2px 10px #bbb;
+    animation: optionbar-appear .5s forwards paused;
+    z-index: 5;
+}
+
+#left-options-ctr {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#center-options-ctr {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#right-options-ctr {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#right-options-ctr button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#timer, #solo-timer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-size: 35px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#timer input, #solo-timer input {
+    display: block;
+    width: 2.4ch;
+    height: fit-content;
+    padding: 4px 0px;
+    background-color: #fff;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 40px;
+    transition: .1s;
+}
+
+#timer input:hover, #solo-timer input:hover {
+    background-color: #f3f3f3;
+}
+
+#timer input:focus, #solo-timer input:focus {
+    background-color: #e6e6e6;
+    outline: none;
+}
+
+.timer-btn {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(177, 213, 241);
+    border: none;
+    border-radius: 50%;
+    transition: .1s;
+}
+
+.timer-btn:disabled {
+    background-color: rgb(235, 240, 245);
+    color: #777;
+    cursor: not-allowed;
+}
+
+.timer-btn:not(:disabled):hover {
+    background-color: rgb(145, 186, 219);
+}
+
+#content-ctr {
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+}
+
 #generator {
-    max-width: 300px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px #aaa;
+    padding: 20px 40px;
+    z-index: 20;
+}
+
+#close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 30px;
+    color: #aaae;
+    cursor: pointer;
+    transition: .1s;
+}
+
+#close:hover {
+    color: #777e
+}
+
+#passage-settings-ctr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+#generate-btn {
+    margin-right: 5px;
+}
+
+/* Circular Timer Countdown */
+
+#solo-timer-ctr {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    width: 100%;
+}
+
+#solo-timer {
+    width: 300px;
+    height: 300px;
+}
+
+#st-svg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+}
+
+#st-circle {
+    fill: none;
+    stroke: none;
+}
+
+#st-bg {
+    stroke-width: 5px;
+    stroke: #ddd;
+}
+
+#st-time {
+    stroke-width: 5px;
+    stroke: rgb(145, 186, 219);
+    stroke-linecap: round;
+    stroke-dasharray: 283 283;
+    transform: rotate(90deg) scaleX(-1);
+    transform-origin: center;
+    transition: 1s linear all;
+}
+
+#st-btn-ctr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+}
+
+.st-timer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    height: 75px;
+    background-color: rgb(177, 213, 241);
+    border: none;
+    border-radius: 50%;
+    transition: .1s;
+}
+
+.st-timer-btn:disabled {
+    background-color: rgb(235, 240, 245);
+    color: #777;
+    cursor: not-allowed;
+}
+
+.st-timer-btn:not(:disabled):hover {
+    background-color: rgb(145, 186, 219);
 }
 
 #passages {
@@ -68,7 +329,35 @@ div.reference-bottom a {
     }
 }
 
+@media only screen and (max-width:800px) {
+    .txt-desktop {
+        display: none;
+    }
+}
+
+@media only screen and (min-width:800px) {
+    .txt-desktop {
+        display: block;
+    }
+}
+
 @media print {
+    #curtain {
+        display: none;
+    }
+
+    #optionbar {
+        display: none;
+    }
+
+    #solo-timer-ctr {
+        display: none;
+    }
+
+    #passage-settings-ctr {
+        display: none;
+    }
+
     #generator {
         display: none;
     }
