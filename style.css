@@ -3,6 +3,10 @@
     box-sizing: border-box;
 }
 
+.cache-reload {
+    display: none;
+}
+
 input.wpm {
     width: 4em !important;
 }
