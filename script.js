@@ -79,6 +79,12 @@
         $('#generate').click(function () {
             this.disabled = true;
             generatePassages();
+            $('#generator').css('display', 'none');
+            $('#curtain').css('display', 'none');
+        });
+
+        $('#generate-btn').click(function () {
+            generatePassages();
         });
     });
 
@@ -89,7 +95,7 @@
 
         $.ajax({
             dataType: 'json',
-            url: `2024/${division.toLowerCase()}-${version.toLowerCase()}.json`,
+            url: `../json/${division.toLowerCase()}-${version.toLowerCase()}.json`,
         }).done(function (passages) {
             console.log(`received ${passages.length} passages`);
             let max_words = Number(valueOf($('#max_words')));
