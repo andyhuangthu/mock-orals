@@ -183,6 +183,38 @@ div.container-fluid > div {
     z-index: 20;
 }
 
+/* Text-size radio buttons */
+#text-size-ctr label:has([type=radio]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 50px;
+    height: 40px;
+    border: 2px solid #aaa;
+    border-radius: 10px;
+    transition: background-color 0.3s;    
+}
+
+#text-size-ctr label:has([type=radio]:not(:disabled)) {
+    cursor: pointer;
+}
+
+#text-size-ctr label:has([type=radio]):hover {
+    background-color: #d3e8ee;
+    border-color: rgb(148, 171, 190);
+}
+
+#text-size-ctr label:has([type=radio]:checked) {
+    color: #fff;
+    background-color: rgb(83, 158, 219);
+    border-color: rgb(83, 158, 219);
+}
+
+#text-size-ctr input[type=radio] {
+    display:none;
+}
+
 #close {
     position: absolute;
     right: 15px;
