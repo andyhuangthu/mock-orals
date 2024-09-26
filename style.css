@@ -166,10 +166,6 @@ div.container-fluid > div {
     flex-flow: column;
 }
 
-#generator {
-    max-width: 300px;
-}
-
 #generator2 {
     position: fixed;
     left: 50%;
@@ -183,7 +179,6 @@ div.container-fluid > div {
     z-index: 20;
 }
 
-/* Text-size radio buttons */
 #text-size-ctr label:has([type=radio]) {
     display: inline-flex;
     align-items: center;
@@ -320,16 +315,14 @@ div.container-fluid > div {
     padding: 20px 0;
 }
 
-#passages > div {
+.passage {
     background-color: #f7f7f9;
     border: 1px solid #e1e1e8;
     border-radius: 8px;
-    padding: 8px 8px 0 8px;
+    padding: 8px;
     margin-top: 40px;
     position: relative;
-}
-
-.passage {
+    width: clamp(300px, 90vw, 600px);
     page-break-inside: avoid;
 }
 
@@ -341,6 +334,29 @@ div.container-fluid > div {
     color: #a94442;
     background-color: #f2dede;
     text-decoration: underline;
+}
+
+.hide-text-ctr .passage {
+    display: flex;
+    align-items: space-between;
+    justify-content: center;
+    position: relative;
+    width: clamp(300px, 90vw, 600px);
+}
+
+.hide-text-ctr .reference-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.hide-text-ctr .passage p, .hide-text-ctr .reference-bottom {
+    display:none;
+}
+
+.hide-text-ctr .reference-top {
+    margin: 0;
 }
 
 div.reference-top {
@@ -362,6 +378,7 @@ div.reference-bottom a {
     width: 2em;
     text-align: center;
     float: right;
+    color: #999;
 }
 
 @media screen {
@@ -383,6 +400,9 @@ div.reference-bottom a {
 }
 
 @media print {
+    .extra-link {
+        display: none;
+    }
     #curtain {
         display: none;
     }

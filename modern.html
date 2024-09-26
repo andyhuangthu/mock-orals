@@ -55,7 +55,7 @@
             </button>
         </div>
     </div>
-    <a href="/mock-orals" style="position:absolute;left:20px;top:20px;z-index:100">Back to Old Look</a>
+    <a class="extra-link" href="/mock-orals" style="position:absolute;left:20px;top:20px;z-index:100">Back to Old Look</a>
     <div id="content-ctr" class="container-fluid">
     <div id="content">
         <div id="generator2" class="form-horizontal">
@@ -98,6 +98,10 @@
                 <label for="small"><input id="small" name="text-size" class="text-size" value="16px" type="radio">S</label>
                 <label for="mid"><input id="mid" name="text-size" class="text-size" value="20px" type="radio">M</label>
                 <label for="large"><input id="large" name="text-size" class="text-size" value="24px" type="radio">L</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="hide-text" id="hide-text">
+                <label for="hide-text">Hide Text</label>
             </div>
             <div class="form-group">
                 <button id="generate" type="button" class="btn btn-primary">Generate</button> 12 passages to recite in 8 minutes
@@ -177,10 +181,22 @@
             curtain.style.display = ""
         })
 
-        // listen for changes in font-size
+        // passage settings
+        const passages = document.querySelector("#passages")
+        const hideTextCheck = document.querySelector("#hide-text")
+
+        hideTextCheck.addEventListener("change", () => {
+            if (hideTextCheck.checked) {
+                passages.classList.add("hide-text-ctr")
+            }
+            else {
+                passages.classList.remove("hide-text-ctr")
+            }
+        })
+
         document.querySelectorAll(".text-size").forEach(radio => {
             radio.addEventListener("change", () => {
-                document.querySelector("#passages").style.fontSize = radio.value
+                passages.style.fontSize = radio.value
             })
         })
 
