@@ -132,7 +132,7 @@
                         $('<div class="reference-top"></div>').append(
                             $('<span></span>').text(passage.reference),
                             $(`<span class="number">${i + 1}</span>`)),
-                        $('<p></p>').append(passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]\w+)/g,'<span>$1</span>')),
+                        $('<p></p>').append(passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*\'?[a-zA-Z]+)/g,'<span>$1</span>')),
                         $('<div class="reference-bottom"></div>').append(
                             $('<span></span>').text(passage.reference),
                             $('<a href="javascript:void(0)">start over</a>').click(clearErrors))
