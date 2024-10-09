@@ -127,6 +127,7 @@
 
             let container = $('#passages').html($(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`));
             passages.forEach(function (passage, i) {
+                alert(passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*\'?[a-zA-Z]+)/g,'<span>$1</span>'))
                 container.append(
                     $('<div class="passage"></div>').append(
                         $('<div class="reference-top"></div>').append(
