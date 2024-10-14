@@ -35,8 +35,8 @@
             let division = $(this), min_wpm, max_wpm, max_words;
             switch (division.val()) {
                 case 'Senior':
-                    min_wpm = 125;
-                    max_wpm = 140;
+                    min_wpm = 130;
+                    max_wpm = 150;
                     max_words = 220;
                     break;
                 case 'Junior':
