@@ -59,52 +59,54 @@
     <div id="content-ctr" class="container-fluid">
     <div id="content">
         <div id="generator2" class="form-horizontal">
-            <h2 class="text-center">Passage Settings</h2>
-            <div class="form-group">
-                <label for="version">Bible Translation</label>
-                <select id="version" class="form-control" required="required">
-                    <option value="ESV" selected="selected">ESV - English Standard Version</option>
-                    <option value="NIV">NIV - New International Version</option>
-                    <option value="NKJV">NKJV - New King James Version</option>
-                    <option value="KJV">KJV - King James Version</option>
-                    <option value="NASB">NASB - New American Standard Bible</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="division">Division</label>
-                <select id="division" class="form-control" required="required">
-                    <option selected="selected" value="Senior">Senior</option>
-                    <option value="Junior">Junior</option>
-                    <option value="Primary">Primary</option>
-                </select>
-            </div>
-            <div id="speech_rate_group" class="form-group">
-                <label for="min_wpm">Speech Rate</label>
-                <div>
-                    <input id="min_wpm" type="text" class="form-control wpm" style="display: inline" placeholder="125"/>
-                    to
-                    <input id="max_wpm" type="text" class="form-control wpm" style="display: inline" placeholder="140"/>
-                    words per minute
+            <div>
+                <h2 class="text-center">Passage Settings</h2>
+                <div class="form-group">
+                    <label for="version">Bible Translation</label>
+                    <select id="version" class="form-control" required="required">
+                        <option value="ESV" selected="selected">ESV - English Standard Version</option>
+                        <option value="NIV">NIV - New International Version</option>
+                        <option value="NKJV">NKJV - New King James Version</option>
+                        <option value="KJV">KJV - King James Version</option>
+                        <option value="NASB">NASB - New American Standard Bible</option>
+                    </select>
                 </div>
-            </div>
-            <div id="max_words_group" class="form-group">
-                <label for="max_words">Maximum Passage Size</label>
-                <div>
-                    <input id="max_words" type="text" class="form-control wpm" style="display: inline" placeholder="350" /> words
+                <div class="form-group">
+                    <label for="division">Division</label>
+                    <select id="division" class="form-control" required="required">
+                        <option selected="selected" value="Senior">Senior</option>
+                        <option value="Junior">Junior</option>
+                        <option value="Primary">Primary</option>
+                    </select>
                 </div>
-            </div>
-            <div id="text-size-ctr" class="form-group">
-                <label>Text Size</label>
-                <label for="small"><input id="small" name="text-size" class="text-size" value="16px" type="radio">S</label>
-                <label for="mid"><input id="mid" name="text-size" class="text-size" value="20px" type="radio">M</label>
-                <label for="large"><input id="large" name="text-size" class="text-size" value="24px" type="radio">L</label>
-            </div>
-            <div class="form-group">
-                <input type="checkbox" name="hide-text" id="hide-text">
-                <label for="hide-text">Hide Text</label>
-            </div>
-            <div class="form-group">
-                <button id="generate" type="button" class="btn btn-primary">Generate</button> 12 passages to recite in 8 minutes
+                <div id="speech_rate_group" class="form-group">
+                    <label for="min_wpm">Speech Rate</label>
+                    <div>
+                        <input id="min_wpm" type="text" class="form-control wpm" style="display: inline" placeholder="125"/>
+                        to
+                        <input id="max_wpm" type="text" class="form-control wpm" style="display: inline" placeholder="140"/>
+                        words per minute
+                    </div>
+                </div>
+                <div id="max_words_group" class="form-group">
+                    <label for="max_words">Maximum Passage Size</label>
+                    <div>
+                        <input id="max_words" type="text" class="form-control wpm" style="display: inline" placeholder="350" /> words
+                    </div>
+                </div>
+                <div id="text-size-ctr" class="form-group">
+                    <label>Text Size</label>
+                    <label for="small"><input id="small" name="text-size" class="text-size" value="14px" type="radio" checked>S</label>
+                    <label for="mid"><input id="mid" name="text-size" class="text-size" value="18px" type="radio">M</label>
+                    <label for="large"><input id="large" name="text-size" class="text-size" value="22px" type="radio">L</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="hide-text" id="hide-text">
+                    <label for="hide-text">Hide Text</label>
+                </div>
+                <div class="form-group">
+                    <button id="generate" type="button" class="btn btn-primary">Generate</button> 12 passages to recite in 8 minutes
+                </div>
             </div>
             <div id="close">&times;</div>
             <div id="errors" class="text-danger"></div>
