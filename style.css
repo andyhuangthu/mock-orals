@@ -109,6 +109,23 @@ div.container-fluid > div {
     justify-content: center;
 }
 
+#close-blind {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: #fafafa;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    transition: .2s;
+}
+
+#close-blind:hover {
+    background-color: #ddd;
+}
+
 #timer, #solo-timer {
     position: relative;
     display: flex;
@@ -234,8 +251,8 @@ div.container-fluid > div {
     padding: 20px 0;
 }
 
-#generate-btn {
-    margin-right: 5px;
+.control-btn:not(:first-child) {
+    margin-left: 5px;
 }
 
 /* Circular Timer Countdown */

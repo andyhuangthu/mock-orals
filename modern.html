@@ -54,6 +54,11 @@
                 <i class="fa-solid fa-arrow-rotate-left"></i>
             </button>
         </div>
+        <!--
+        <div id="right-options-ctr">
+            <button id="close-blind"><i class="fa-solid fa-angle-left"></i></button>
+        </div>
+        -->
     </div>
     <a class="extra-link" href="/mock-orals" style="position:absolute;left:20px;top:20px;z-index:100">Back to Old Look</a>
     <div id="content-ctr" class="container-fluid">
@@ -111,6 +116,8 @@
             <div id="close">&times;</div>
             <div id="errors" class="text-danger"></div>
         </div>
+        
+        <h1 class="text-center">Bible Bee Mock Orals</h1>
 
         <div id="solo-timer-ctr">
             <div id="solo-timer">
@@ -129,15 +136,18 @@
         </div>
 
         <div id="passage-settings-ctr">
-            <button id="generate-btn" class="btn btn-primary">
+            <button id="generate-btn" class="btn btn-primary control-btn">
                 <i class="fa-solid fa-repeat"></i><span>&nbsp;Generate</span>
             </button>
-            <button id="settings-btn" class="btn btn-primary">
+            <button id="settings-btn" class="btn btn-primary control-btn">
                 <i class="fa-solid fa-gear"></i><span>&nbsp;Settings</span>
+            </button>
+            <button id="close-timer-btn" class="btn btn-primary control-btn">
+                <i class="fa-regular fa-clock"></i><span>&nbsp;Close Timer</span>
             </button>
         </div>
 
-        <div id="passages">
+        <div id="passages" style="height: 1000px;">
         </div>
     </div>
     </div>
@@ -148,13 +158,13 @@
         window.addEventListener("scroll", () => {
             if (!optionbarAnimating)
             {
-                console.log(window.scrollY)
-                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName)) {
+                console.log(window.scrollY, timer_open)
+                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName) && timer_open) {
                     optionbar.style.animationName = "optionbar-appear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
-                else if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear") {
+                else if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear" && timer_open) {
                     optionbar.style.animationName = "optionbar-disappear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
@@ -177,8 +187,8 @@
         })
         
         // open settings
-        const openGenerator = document.querySelector("#settings-btn")
-        openGenerator.addEventListener("click", () => {
+        const controlGenerator = document.querySelector("#settings-btn")
+        controlGenerator.addEventListener("click", () => {
             generator.style.display = ""
             curtain.style.display = ""
         })
@@ -316,7 +326,6 @@
         soloTimer.addEventListener("click", pauseTimer)
 
         function timerControl() {
-            
             // change icons
             if (!playing) {
                 playing = true
@@ -409,6 +418,35 @@
         resetBtn.addEventListener("click", resetTimer)
 
         soloResetBtn.addEventListener("click", resetTimer)
+
+        // open or close timer
+        const controlTimer = document.querySelector("#close-timer-btn")
+        const soloTimerCtr = document.querySelector("#solo-timer-ctr")
+        var timer_open = true
+        controlTimer.addEventListener("click", () => {
+            if (timer_open) {
+                controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
+                timer_open = false
+                optionbar.style.display = "none"
+                soloTimerCtr.style.display = "none"
+                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName)) {
+                    optionbar.style.animationName = "optionbar-appear"
+                    optionbar.style.animationPlayState = "running"
+                    optionbarAnimating = true
+                }
+            }
+            else {
+                controlTimer.querySelector("span").innerHTML = "&nbsp;Close Timer"
+                timer_open = true
+                optionbar.style.display = ""
+                soloTimerCtr.style.display = ""
+                if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear") {
+                    optionbar.style.animationName = "optionbar-disappear"
+                    optionbar.style.animationPlayState = "running"
+                    optionbarAnimating = true
+                }
+            }
+        })
     </script>
     <script> </script>
 </body>
