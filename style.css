@@ -313,8 +313,7 @@ div.container-fluid > div {
     padding: 20px 0;
 }
 
-.control-btn {
-    display: inline-block;
+.theme-btn {
     padding: 5px 10px;
     background-color: var(--theme-bg);
     color: var(--theme-text);
@@ -322,10 +321,14 @@ div.container-fluid > div {
     border-radius: 5px;
 }
 
-.control-btn:hover, .control-btn:active {
+.theme-btn:hover, .theme-btn:active {
     background-color: var(--theme-bg-shade);
 }
 
+
+.control-btn {
+    display: inline-block;
+}
 .control-btn:not(:first-child) {
     margin-left: 5px;
 }
