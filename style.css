@@ -3,6 +3,62 @@
     box-sizing: border-box;
 }
 
+:root {
+    --bg-primary: #fafafa;
+    --bg-shade: #f3f3f3;
+    --bg-shade-bold: #e6e6e6;
+    --bg-mid: #aaa;
+    --bg-mid-bold: #777;
+    --text-primary: #111;
+    --text-disabled: #777;
+    --text-blend: #efefef;
+    --border-fade: var(--bg-mid);
+    --border-primary: #e1e1e1;
+    --theme-primary: #97c1e4;
+    --theme-bg: #5a90bd;
+    --theme-border: #699eca;
+    --theme-text: #fff;
+    --theme-fade: #d3e8ee;
+    --theme-border-fade: rgb(148, 171, 190);
+    --theme-shade: #75a4c9;
+    --theme-bg-shade: #5584a8;
+    --theme-disabled: #ebf0f5;
+}
+/*
+#text-size-ctr label:has([type=radio]:checked) {
+    color: var(--text-blend);
+    background-color: rgb(83, 158, 219);
+    border-color: rgb(83, 158, 219);
+}
+*/
+
+[data-theme="dark"] {
+    --bg-primary: #161628;
+    --bg-shade: #212133;
+    --bg-shade-bold: #27273f;
+    --bg-mid: #3c3c63;
+    --bg-mid-bold: #53538b;
+    --text-primary: #efefef;
+    --text-disabled: #aaa;
+    --text-blend: #111;
+    --border-fade: #aaa;
+    --border-primary: var(--bg-mid);
+    --theme-primary: #508ab6;
+    --theme-bg: var(--theme-primary);
+    --theme-border: #3a729c;
+    --theme-text: #efefef;
+    --theme-fade: #4c607a;
+    --theme-border-fade: #6081a7;
+    --theme-shade: #2d628b;
+    --theme-bg-shade: var(--theme-shade);
+    --theme-disabled: #313f50;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary)
+}
+
 .cache-reload-p {
     display: none;
 }
@@ -21,6 +77,28 @@ input[type=number] {
     -moz-appearance:textfield; /* Firefox */
 }
 
+input[type=number]::placeholder {
+    color: #888;
+    opacity: 0.4; /* Firefox */
+}
+
+input[type=number]::-ms-input-placeholder { /* Edge 12 -18 */
+    color: #888;
+    opacity: 0.4;
+}
+
+select, input[type=text] {
+    background-color: var(--bg-shade);
+    width: 100%;
+    padding: 8px 5px;
+    border: none;
+    border-radius: 5px;
+}
+
+select:active, select:focus, input[type=text]:active, input[type=text]:focus {
+    outline: 2px solid var(--border-primary);
+}
+
 div.container-fluid {
     margin: 20px 10px;
 }
@@ -35,7 +113,7 @@ div.container-fluid > div {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #0002;
+    background-color: #0004;
     z-index: 10;
 }
 
@@ -72,8 +150,8 @@ div.container-fluid > div {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #fff;
-    box-shadow: 0px 2px 10px #bbb;
+    background-color: var(--bg-primary);
+    box-shadow: 0px 2px 10px #000e;
     animation: optionbar-appear .5s forwards paused;
     z-index: 5;
 }
@@ -109,29 +187,12 @@ div.container-fluid > div {
     justify-content: center;
 }
 
-#close-blind {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    background-color: #fafafa;
-    border: none;
-    border-radius: 50%;
-    font-size: 24px;
-    transition: .2s;
-}
-
-#close-blind:hover {
-    background-color: #ddd;
-}
-
 #timer, #solo-timer {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #000;
+    color: var(--text-primary);
     font-size: 35px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
@@ -141,7 +202,7 @@ div.container-fluid > div {
     width: 2.4ch;
     height: fit-content;
     padding: 4px 0px;
-    background-color: #fff;
+    background-color: var(--bg-primary);
     border: none;
     border-radius: 8px;
     text-align: center;
@@ -150,31 +211,31 @@ div.container-fluid > div {
 }
 
 #timer input:hover, #solo-timer input:hover {
-    background-color: #f3f3f3;
+    background-color: var(--bg-shade);
 }
 
 #timer input:focus, #solo-timer input:focus {
-    background-color: #e6e6e6;
+    background-color: var(--bg-shade-bold);
     outline: none;
 }
 
 .timer-btn {
     width: 40px;
     height: 40px;
-    background-color: rgb(177, 213, 241);
+    background-color: var(--theme-primary);
     border: none;
     border-radius: 50%;
     transition: .1s;
 }
 
 .timer-btn:disabled {
-    background-color: rgb(235, 240, 245);
-    color: #777;
+    background-color: var(--theme-disabled);
+    color: var(--text-disabled);
     cursor: not-allowed;
 }
 
 .timer-btn:not(:disabled):hover {
-    background-color: rgb(145, 186, 219);
+    background-color: var(--theme-shade);
 }
 
 #content-ctr {
@@ -192,8 +253,8 @@ div.container-fluid > div {
     align-items: center;
     justify-content: center;
     flex-flow: column;
-    background-color: #fff;
-    box-shadow: 0px 0px 10px #aaa;
+    background-color: var(--bg-primary);
+    box-shadow: 0px 0px 10px #000a;
     padding: 20px 40px;
     overflow-y: auto;
     z-index: 20;
@@ -206,7 +267,7 @@ div.container-fluid > div {
     gap: 1rem;
     width: 50px;
     height: 40px;
-    border: 2px solid #aaa;
+    border: 2px solid var(--border-fade);
     border-radius: 10px;
     transition: background-color 0.3s;    
 }
@@ -216,14 +277,15 @@ div.container-fluid > div {
 }
 
 #text-size-ctr label:has([type=radio]):hover {
-    background-color: #d3e8ee;
-    border-color: rgb(148, 171, 190);
+    color: #111;
+    background-color: var(--theme-fade);
+    border-color: var(--theme-border-fade);
 }
 
 #text-size-ctr label:has([type=radio]:checked) {
-    color: #fff;
-    background-color: rgb(83, 158, 219);
-    border-color: rgb(83, 158, 219);
+    color: var(--text-blend);
+    background-color: var(--theme-primary);
+    border-color: var(--theme-primary);
 }
 
 #text-size-ctr input[type=radio] {
@@ -235,13 +297,13 @@ div.container-fluid > div {
     right: 15px;
     top: 10px;
     font-size: 30px;
-    color: #aaae;
+    color: var(--bg-mid);
     cursor: pointer;
     transition: .1s;
 }
 
 #close:hover {
-    color: #777e
+    color: var(--bg-mid-bold)
 }
 
 #passage-settings-ctr {
@@ -249,6 +311,19 @@ div.container-fluid > div {
     align-items: center;
     justify-content: center;
     padding: 20px 0;
+}
+
+.control-btn {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: var(--theme-bg);
+    color: var(--theme-text);
+    border: 2px solid var(--theme-border);
+    border-radius: 5px;
+}
+
+.control-btn:hover, .control-btn:active {
+    background-color: var(--theme-bg-shade);
 }
 
 .control-btn:not(:first-child) {
@@ -288,12 +363,12 @@ div.container-fluid > div {
 
 #st-bg {
     stroke-width: 5px;
-    stroke: #ddd;
+    stroke: var(--bg-shade);
 }
 
 #st-time {
     stroke-width: 5px;
-    stroke: rgb(145, 186, 219);
+    stroke: var(--theme-primary);
     stroke-linecap: round;
     stroke-dasharray: 283 283;
     transform: rotate(90deg) scaleX(-1);
@@ -314,20 +389,21 @@ div.container-fluid > div {
     justify-content: center;
     width: 75px;
     height: 75px;
-    background-color: rgb(177, 213, 241);
+    background-color: var(--theme-primary);
+    color: var(--theme-text);
     border: none;
     border-radius: 50%;
     transition: .1s;
 }
 
 .st-timer-btn:disabled {
-    background-color: rgb(235, 240, 245);
-    color: #777;
+    background-color: var(--theme-disabled);
+    color: var(--text-disabled);
     cursor: not-allowed;
 }
 
 .st-timer-btn:not(:disabled):hover {
-    background-color: rgb(145, 186, 219);
+    background-color: var(--theme-shade);
 }
 
 #passages {
@@ -336,8 +412,8 @@ div.container-fluid > div {
 }
 
 .passage {
-    background-color: #f7f7f9;
-    border: 1px solid #e1e1e8;
+    background-color: var(--bg-shade);
+    border: 3px solid var(--border-primary);
     border-radius: 8px;
     padding: 8px;
     margin-top: 40px;
@@ -352,7 +428,7 @@ div.container-fluid > div {
 
 .passage span.has-error {
     color: #a94442;
-    background-color: #f2dede;
+    background-color: #ec818122;
     text-decoration: underline;
 }
 
