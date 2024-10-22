@@ -181,6 +181,7 @@
                 for (let i = 0; i < themeSelector.options.length; i++) {
                     if (themeSelector.options[i].value == theme) {
                         themeSelector.options[i].selected = true
+                        document.querySelector("html").setAttribute("data-theme", theme)
                     }
                 }
             }
