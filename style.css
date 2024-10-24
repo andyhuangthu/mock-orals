@@ -277,7 +277,7 @@ div.container-fluid > div {
 }
 
 #text-size-ctr label:has([type=radio]):hover {
-    color: #111;
+    color: var(--text-primary);
     background-color: var(--theme-fade);
     border-color: var(--theme-border-fade);
 }
