@@ -305,6 +305,8 @@
                 obj.placeholder = obj.placeholder.slice(-1) + obj.value
             }
             obj.value = ""
+            // update svg
+            timeSVG.style.strokeDasharray = `${(minutes * 60 + seconds - 1) / (parseInt(originalMinutes) * 60 + parseInt(originalSeconds)) * 283} 283`
         }
 
         function updateTime(obj1, obj2, val=60) {
@@ -437,6 +439,7 @@
                 resetBtn.disabled = true
                 soloPlayBtn.disabled = false
                 soloResetBtn.disabled = true
+                timeSVG.style.strokeDasharray = `${(minutes * 60 + seconds - 1) / (parseInt(originalMinutes) * 60 + parseInt(originalSeconds)) * 283} 283`
             }
         }
 
