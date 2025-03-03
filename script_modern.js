@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
 import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAN3r3KC5Kqrjp07Vide5DjXAi2TYEFd-s",
+    apiKey: process.env.GOOGLE_API_KEY,
     authDomain: "mock-orals.firebaseapp.com",
     projectId: "mock-orals",
     storageBucket: "mock-orals.firebasestorage.app",
