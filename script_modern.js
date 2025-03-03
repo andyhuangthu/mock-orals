@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, getDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
+import QRCodeStyling from "https://cdn.skypack.dev/qr-code-styling";
+
 const firebaseConfig = {
     apiKey: "GOOGLE_API_KEY",
     authDomain: "mock-orals.firebaseapp.com",
@@ -235,8 +237,16 @@ function displaySessionVerses(container, passages) {
                         var url = new URL(window.location);
                         url.searchParams.set("session", sessionId);
                         window.history.pushState({}, "", url);
-                        const qrCodeImg = document.getElementById("qrcode");
-                        qrCodeImg.src = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(url)}&choe=UTF-8`;
+                      
+                        const qrCode = new QRCodeStyling({
+                          width: 300,
+                          height: 300,
+                          data: url, // Replace with your URL
+                          dotsOptions: { color: "#000", type: "rounded" },
+                          backgroundOptions: { color: "#fff" }
+                        });
+                      
+                        qrCode.append(document.getElementById("qrcode"));
                     })
                     .catch(error => console.error("Error saving session: ", error));
             })
