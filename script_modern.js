@@ -235,6 +235,8 @@ function displaySessionVerses(container, passages) {
                         var url = new URL(window.location);
                         url.searchParams.set("session", sessionId);
                         window.history.pushState({}, "", url);
+                        const qrCodeImg = document.getElementById("qrcode");
+                        qrCodeImg.src = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(url)}&choe=UTF-8`;
                     })
                     .catch(error => console.error("Error saving session: ", error));
             })

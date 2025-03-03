@@ -141,6 +141,10 @@
             </div>
         </div>
 
+        <div id="passage-share-qr-ctr">
+            <img id="qrcode" src="" alt="QR Code" />
+        </div>
+
         <div id="passage-settings-ctr">
             <button id="generate-btn" class="control-btn theme-btn">
                 <i class="fa-solid fa-repeat"></i><span>&nbsp;Generate</span>
@@ -155,10 +159,10 @@
                 <i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>
             </button>
             <script>
-            function copyShareLink() {
-                navigator.clipboard.writeText(window.location.href);
-                document.getElementById('copy-link-btn').innerHTML = `<i class="fa-regular fa-clipboard"></i>&nbsp;Copied!`;
-            }
+                function copyShareLink() {
+                    navigator.clipboard.writeText(window.location.href);
+                    document.getElementById('copy-link-btn').innerHTML = `<i class="fa-regular fa-clipboard"></i>&nbsp;Copied!`;
+                }
             </script>
         </div>
 
