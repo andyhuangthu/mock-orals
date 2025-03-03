@@ -44,7 +44,6 @@ if (sessionId) {
                     versesData = data;
 
                     // Now filter the verses based on the session data
-                    const container = document.getElementById("passages");
                     const mode = urlParams.get("mode") || "ref"; // Default to "ref" mode if not specified
         
                     // Filter verses to match those in the JSON file
@@ -58,8 +57,8 @@ if (sessionId) {
         
                     console.log("Matched verses:", matchedVerses); // Debug: log the final matched verses
         
-        
-                    displaySessionVerses(container, matchedVerses)
+                    var container = $('#passages').html(`<h2>${sessionData.division} &mdash; ${sessionData.version}</h2><h4>${sessionData.words} words (${sessionData.wpm} words per minute)</h4>`);
+                    displayVerses(container, matchedVerses)
                 })
             .catch(error => {
                 console.error("Error loading JSON file:", error);
@@ -213,8 +212,8 @@ function displaySessionVerses(container, passages) {
                     return;
                 }
 
-                let container = $('#passages').html(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`);
-                displayVerses($('#passages'), passages)
+                var container = $('#passages').html(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`);
+                displayVerses(container, passages)
 
                 // Generate a session ID and store the selected passages in Firestore
                 if (!sessionId)
@@ -223,7 +222,15 @@ function displaySessionVerses(container, passages) {
                 }
                 let selectedVerses = passages.map(passage => passage.reference);
 
-                setDoc(doc(db, "sessions", sessionId), { verses: selectedVerses, jsonFile: jsonFile })
+                setDoc(doc(db, "sessions", sessionId), { 
+                    verses: selectedVerses, 
+                    jsonFile: jsonFile,
+                    expiryTime: firebase.firestore.Timestamp.fromMillis(Date.now() + 30 * 60 * 1000),
+                    division: division,
+                    version: version,
+                    words: words,
+                    wpm: Math.round(wpm),
+                })
                     .then(() => {
                         var url = new URL(window.location);
                         url.searchParams.set("session", sessionId);
