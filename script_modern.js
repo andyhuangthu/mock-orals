@@ -232,6 +232,7 @@ function displaySessionVerses(container, passages) {
                     .catch(error => console.error("Error saving session: ", error));
             })
             .catch(error => {
+                console.error(error)
                 $('#passages').html(`<span class="text-danger">${error}</span>`);
             })
             .finally(() => {
