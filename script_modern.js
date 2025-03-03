@@ -4,7 +4,7 @@ import { getFirestore, collection, doc, setDoc, getDoc, Timestamp } from "https:
 import QRCodeStyling from "https://cdn.skypack.dev/qr-code-styling";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAN3r3KC5Kqrjp07Vide5DjXAi2TYEFd-s",
+    apiKey: "GOOGLE_API_KEY",
     authDomain: "mock-orals.firebaseapp.com",
     projectId: "mock-orals",
     storageBucket: "mock-orals.firebasestorage.app",
