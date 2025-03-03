@@ -1,0 +1,27 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set environment variable for API key
+      run: echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" >> $GITHUB_ENV
+
+    - name: Replace API Key in JavaScript
+      run: |
+        # Replace 'GOOGLE_API_KEY' with the actual API key in your JS file
+        sed -i 's|GOOGLE_API_KEY|'"$GOOGLE_API_KEY"'|g' ./path/to/your/js/file.js
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        publish_dir: ./
