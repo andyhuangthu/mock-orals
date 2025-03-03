@@ -1,23 +1,122 @@
-(function () {
-    function valueOf(node) {
-        return node.val() || node.prop('placeholder');
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAN3r3KC5Kqrjp07Vide5DjXAi2TYEFd-s",
+    authDomain: "mock-orals.firebaseapp.com",
+    projectId: "mock-orals",
+    storageBucket: "mock-orals.firebasestorage.app",
+    messagingSenderId: "980267865246",
+    appId: "1:980267865246:web:5605dfbe38d30bc3da178f",
+    measurementId: "G-SQMBFDFWR7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const sessionId = urlParams.get("session");
+
+// Normalize reference function to clean up any extra spaces or characters
+function normalizeReference(reference) {if (reference) {
+    return reference.trim().toLowerCase().replace(/\s+/g, ' ');
+    } else {
+        console.error("Reference is undefined or null:", reference); // Log undefined reference
+        return ''; // Return empty string if reference is undefined or null
     }
+}
 
+if (sessionId) {
+    let versesData = []; // This will hold the data from the JSON file
 
-    function setDefault(node, value) {
-        node.prop('placeholder', value);
-    }
+    // Load the JSON file with verses (using fetch or a local JSON file)
+    
+    const sessionRef = doc(db, "sessions", sessionId); // Get reference to session document
+    getDoc(sessionRef).then(docSnapshot => {
+        if (docSnapshot.exists()) {
+            const sessionData = docSnapshot.data();
+            console.log(sessionData.jsonFile)
+            
+            fetch(`/mock-orals/2024/${sessionData.jsonFile}`)
+                .then(response => response.json())
+                .then(data => {
+                    versesData = data;
 
-
-    function formValid(valid) {
-        if (valid == undefined) {
-            valid = !$('.has-error').length;
+                    // Now filter the verses based on the session data
+                    const container = document.getElementById("passages");
+                    const mode = urlParams.get("mode") || "ref"; // Default to "ref" mode if not specified
+        
+                    // Filter verses to match those in the JSON file
+                    const matchedVerses = sessionData.verses.map(verse => {
+                        const normalizedSessionReference = normalizeReference(verse);
+                        console.log("Checking for verse:", normalizedSessionReference); // Debug: log each verse being checked
+                        const matchedVerse = versesData.find(v => normalizeReference(v.reference) === normalizedSessionReference);
+                        console.log("Matched verse:", matchedVerse); // Debug: log matched verse if found
+                        return matchedVerse ? (mode === "ref" ? matchedVerse : `${matchedVerse.reference}: ${matchedVerse.text}`) : null;
+                    }).filter(Boolean); // Filter out any null values (when no match found)
+        
+                    console.log("Matched verses:", matchedVerses); // Debug: log the final matched verses
+        
+        
+                    displaySessionVerses(container, matchedVerses)
+                })
+            .catch(error => {
+                console.error("Error loading JSON file:", error);
+            });
+        } else {
+            alert("Session not found!");
         }
-        $('#generate').prop('disabled', !valid);
-    }
+    }).catch(error => {
+        console.error("Error fetching session:", error);
+    });
+}
 
+function displayVerses(container, passages) {
+    passages.forEach((passage, i) => {
+        container.append(`<div class="passage">
+                <div class="reference-top">
+                    <span>${passage.reference}</span>
+                    <span class="number">${i + 1}</span>
+                </div>
+                <p>${passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*'?\w+)/g,'<span>$1</span>')}</p>
+                <div class="reference-bottom">
+                    <span>${passage.reference}</span>
+                    <a href="javascript:void(0)" onclick="clearErrors(event)">start over</a>
+                </div>
+            </div>`
+        );
+    });
+}
 
-    function speechRateChanged() {
+function displaySessionVerses(container, passages) {
+    passages.forEach((passage, i) => {
+        container.insertAdjacentHTML('beforeend',
+            `<div class="passage">
+                <div class="reference-top">
+                    <span>${passage.reference}</span>
+                    <span class="number">${i + 1}</span>
+                </div>
+                <p>${passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*'?\w+)/g,'<span>$1</span>')}</p>
+                <div class="reference-bottom">
+                    <span>${passage.reference}</span>
+                    <a href="javascript:void(0)" onclick="clearErrors(event)">start over</a>
+                </div>
+            </div>`
+        );
+    });
+}
+
+(() => {
+    const DEBUG_URL = ""
+    const valueOf = (node) => node.val() || node.prop('placeholder');
+    const setDefault = (node, value) => node.prop('placeholder', value);
+    
+    const formValid = (valid = !document.querySelectorAll('.has-error').length) => {
+        document.getElementById('generate').disabled = !valid;
+    };
+    
+    const speechRateChanged = () => {
         let min_wpm = Number(valueOf($('#min_wpm'))),
             max_wpm = Number(valueOf($('#max_wpm')));
         if (isNaN(min_wpm) || isNaN(max_wpm) || min_wpm > max_wpm) {
@@ -27,10 +126,9 @@
             $('#speech_rate_group').removeClass('has-error');
             formValid();
         }
-    }
-
-
-    $(document).ready(function () {
+    };
+    
+    document.addEventListener('DOMContentLoaded', () => {
         $('#division').change(function () {
             let division = $(this), min_wpm, max_wpm, max_words;
             switch (division.val()) {
@@ -60,9 +158,8 @@
             formValid();
         });
 
-        $('#min_wpm').change(speechRateChanged);
-        $('#max_wpm').change(speechRateChanged);
-
+        $('#min_wpm, #max_wpm').change(speechRateChanged);
+        
         $('#max_words').change(function () {
             let max_words = Number(valueOf($(this)));
             if (isNaN(max_words) || max_words < 1) {
@@ -76,78 +173,73 @@
 
         $('.form-control').trigger('change');
 
-        $('#generate').click(function () {
-            this.disabled = true;
-            generatePassages();
-            $('#generator2').css('display', 'none');
-            $('#curtain').css('display', 'none');
-        });
-
-        $('#generate-btn').click(function () {
+        $('#generate, #generate-btn').click(() => {
             generatePassages();
         });
     });
 
-
-    function generatePassages() {
+    const generatePassages = () => {
         let version = $('#version').val(),
             division = $('#division').val();
+        
+        const jsonFile = `${division.toLowerCase()}-${version.toLowerCase()}.json`
 
-        $.ajax({
-            dataType: 'json',
-            url: `/mock-orals/2024/${division.toLowerCase()}-${version.toLowerCase()}.json`,
-        }).done(function (passages) {
-            console.log(`received ${passages.length} passages`);
-            let max_words = Number(valueOf($('#max_words')));
-            if (!isNaN(max_words)) {
-                passages = passages.filter(passage => (passage.word_count <= max_words));
-                console.log(`${passages.length} passages remaining after filtering those with greater than ${max_words} words`);
-            }
-
-            let min_wpm = Number(valueOf($('#min_wpm'))),
-                max_wpm = Number(valueOf($('#max_wpm'))),
-                attempt, words, wpm;
-            for (attempt = 0; attempt < 1000000; attempt++) {
-                // TODO Limit the number of attempts to prevent a run-away script
-                //      Maybe attempt to do a feasibility test beforehand
-                let picked = pick(passages, 12);
-                words = picked.reduce((total, p) => (total + p.word_count), 0);
-                wpm = words / 8;
-                if (min_wpm <= wpm && wpm <= max_wpm) {
-                    console.log(`words = ${words}, wpm = ${wpm}`)
-                    passages = picked;
-                    break;
+        fetch(`/mock-orals/2024/${jsonFile}`)
+            .then(response => response.json())
+            .then(passages => {
+                console.log(`received ${passages.length} passages`);
+                let max_words = Number(valueOf($('#max_words')));
+                if (!isNaN(max_words)) {
+                    passages = passages.filter(passage => passage.word_count <= max_words);
+                    console.log(`${passages.length} passages remaining after filtering`);
                 }
-            }
-            if (attempt >= 1000000) {
-                $('#passages').html($('<span class="text-danger">Maximum attempts reached. Please adjust parameters and try again.</span>'));
+
+                let min_wpm = Number(valueOf($('#min_wpm'))),
+                    max_wpm = Number(valueOf($('#max_wpm')));
+                let attempt, words, wpm;
+                for (attempt = 0; attempt < 1000000; attempt++) {
+                    let picked = pick(passages, 12);
+                    words = picked.reduce((total, p) => total + p.word_count, 0);
+                    wpm = words / 8;
+                    if (min_wpm <= wpm && wpm <= max_wpm) {
+                        console.log(`words = ${words}, wpm = ${wpm}`);
+                        passages = picked;
+                        break;
+                    }
+                }
+                if (attempt >= 1000000) {
+                    $('#passages').html('<span class="text-danger">Maximum attempts reached. Please adjust parameters and try again.</span>');
+                    $('#generate').prop('disabled', false);
+                    return;
+                }
+
+                let container = $('#passages').html(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`);
+                displayVerses($('#passages'), passages)
+
+                // Generate a session ID and store the selected passages in Firestore
+                if (!sessionId)
+                {
+                    let sessionId = Math.random().toString(36).substring(2, 10); // Generate a simple random session ID
+                }
+                let selectedVerses = passages.map(passage => passage.reference);
+
+                setDoc(doc(db, "sessions", sessionId), { verses: selectedVerses, jsonFile: jsonFile })
+                    .then(() => {
+                        var url = new URL(window.location);
+                        url.searchParams.set("session", sessionId);
+                        window.history.pushState({}, "", url);
+                    })
+                    .catch(error => console.error("Error saving session: ", error));
+            })
+            .catch(error => {
+                $('#passages').html(`<span class="text-danger">${error}</span>`);
+            })
+            .finally(() => {
                 $('#generate').prop('disabled', false);
-                return;
-            }
-
-            let container = $('#passages').html($(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`));
-            passages.forEach(function (passage, i) {
-                container.append(
-                    $('<div class="passage"></div>').append(
-                        $('<div class="reference-top"></div>').append(
-                            $('<span></span>').text(passage.reference),
-                            $(`<span class="number">${i + 1}</span>`)),
-                        $('<p></p>').append(passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*\'?[a-zA-Z]+)/g,'<span>$1</span>')),
-                        $('<div class="reference-bottom"></div>').append(
-                            $('<span></span>').text(passage.reference),
-                            $('<a href="javascript:void(0)">start over</a>').click(clearErrors))
-                    ).click(selectWord)
-                );
             });
-        }).fail(function (request, status, error) {
-            $('#passages').html($('<span class="text-danger"></span>').text(`${status}: ${error}`));
-        }).always(function () {
-            $('#generate').prop('disabled', false);
-        });
-    }
+    };
 
-
-    function pick(items, count) {
+    const pick = (items, count) => {
         let indices = Array.from(items, (_, i) => i),
             chosen = [];
         while (indices.length && chosen.length < count) {
@@ -155,73 +247,9 @@
             chosen.push(items[indices.splice(i, 1)[0]]);
         }
         return chosen;
-    }
+    };
 
-
-    function clearErrors(e) {
+    const clearErrors = (e) => {
         $(e.target).closest('.passage').find('.has-error').removeClass('has-error');
-    }
-
-
-    function selectWord(e) {
-        let sel = undefined;
-        if (e.target.nodeName == 'SPAN') {
-            $(e.target).toggleClass('has-error');
-            return;
-        } else if (e.target.nodeName == 'DFN') {
-            sel = window.getSelection();
-            let node = e.target.nextSibling;
-            sel.collapse(node, 0);
-            for ( ; node.nextSibling != null; node = node.nextSibling) {
-                if (node.nodeName == 'DFN')
-                    break;
-            }
-            if (node.nodeName == 'SUP')
-                sel.extend(node);
-            else
-                sel.extend(node, node.length);
-        }
-        /*
-        if (e.target.nodeName == 'P') {
-            sel = window.getSelection();
-            let range = sel.getRangeAt(sel.rangeCount - 1);
-            sel.collapseToStart();
-            sel.modify('move', 'forward', 'character')
-            sel.modify('move', 'backward', 'word')
-            sel.extend(range.endContainer, range.endOffset);
-            sel.modify('extend', 'backward', 'character')
-            sel.modify('extend', 'forward', 'word');
-        }
-        */
-        if (sel === undefined)
-            return;
-
-        let replacements = [];
-        for (let i = 0; i < sel.rangeCount; i++) {
-            range = sel.getRangeAt(i);
-            let nodes = [];
-            for (let node = range.startContainer; node !== null && node !== range.endContainer.nextSibling; node = node.nextSibling) {
-                if (node.nodeName === '#text') {
-                    let start = node === range.startContainer ? range.startOffset : 0;
-                    let end = node === range.endContainer ? range.endOffset : node.data.length;
-                    let text = node.data.slice(start, end);
-                    let parts = text.split(/\b/);
-                    let nodes = parts.map(function(part) {
-                        if (part.match(/^\w/))
-                            return $('<span class="has-error"></span>').text(part)[0];
-                        return document.createTextNode(part);
-                    });
-                    if (start)
-                        nodes.unshift(document.createTextNode(node.data.substr(0, start)));
-                    if (end < node.data.length)
-                        nodes.push(document.createTextNode(node.data.substr(end)));
-                    replacements.push(function() { node.replaceWith.apply(node, nodes); });
-                } else if (node.nodeName == 'SPAN') {
-                    $(node).toggleClass('has-error');
-                }
-            }
-        }
-        for (let fn of replacements) fn();
-        sel.collapseToEnd();
-    }
+    };
 })();

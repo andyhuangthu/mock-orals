@@ -12,7 +12,10 @@
     <link rel="stylesheet" href="style.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="script_modern.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
+    <script src="script_modern.js" type="module"></script>
     <script src="https://kit.fontawesome.com/06b44fd96d.js" crossorigin="anonymous"></script>
 </head>
 
@@ -148,6 +151,15 @@
             <button id="close-timer-btn" class="control-btn theme-btn">
                 <i class="fa-regular fa-clock"></i><span>&nbsp;Close Timer</span>
             </button>
+            <button id="copy-link-btn" class="control-btn theme-btn" onclick="copyShareLink()">
+                <i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>
+            </button>
+            <script>
+            function copyShareLink() {
+                navigator.clipboard.writeText(window.location.href);
+                document.getElementById('copy-link-btn').innerHTML = `<i class="fa-regular fa-clipboard"></i>&nbsp;Copied!`;
+            }
+            </script>
         </div>
 
         <div id="passages" style="height: 1000px;">
@@ -193,7 +205,7 @@
         window.addEventListener("scroll", () => {
             if (!optionbarAnimating)
             {
-                console.log(window.scrollY, timer_open)
+                // console.log(window.scrollY, timer_open)
                 if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName) && timer_open) {
                     optionbar.style.animationName = "optionbar-appear"
                     optionbar.style.animationPlayState = "running"
