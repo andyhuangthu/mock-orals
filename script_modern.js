@@ -4,7 +4,7 @@ import { getFirestore, collection, doc, setDoc, getDoc, Timestamp } from "https:
 import QRCodeStyling from "https://cdn.skypack.dev/qr-code-styling";
 
 const firebaseConfig = {
-    apiKey: "GOOGLE_API_KEY",
+    apiKey: "AIzaSyAN3r3KC5Kqrjp07Vide5DjXAi2TYEFd-s",
     authDomain: "mock-orals.firebaseapp.com",
     projectId: "mock-orals",
     storageBucket: "mock-orals.firebasestorage.app",
@@ -29,8 +29,26 @@ function normalizeReference(reference) {if (reference) {
     }
 }
 
+function generateQrCode(url) {
+    document.getElementById("passage-share-ctr").style.display = "";
+    document.getElementById("qrcode").innerHTML = "";
+                      
+    const qrCode = new QRCodeStyling({
+        width: 100,
+        height: 100,
+        data: url,
+        dotsOptions: { color: "#5a90bd", type: "extra-rounded" },
+        backgroundOptions: { color: "#fff" }
+    });
+    
+    qrCode.append(document.getElementById("qrcode"));
+}
+
 if (sessionId) {
     let versesData = []; // This will hold the data from the JSON file
+
+    // generate qr code
+    generateQrCode(window.location.href)
 
     // Load the JSON file with verses (using fetch or a local JSON file)
     
@@ -218,9 +236,11 @@ function displaySessionVerses(container, passages) {
                 displayVerses(container, passages)
 
                 // Generate a session ID and store the selected passages in Firestore
+                var newID = false
                 if (!sessionId)
                 {
                     sessionId = Math.random().toString(36).substring(2, 10); // Generate a simple random session ID
+                    newID = true
                 }
                 let selectedVerses = passages.map(passage => passage.reference);
 
@@ -237,16 +257,9 @@ function displaySessionVerses(container, passages) {
                         var url = new URL(window.location);
                         url.searchParams.set("session", sessionId);
                         window.history.pushState({}, "", url);
-                      
-                        const qrCode = new QRCodeStyling({
-                          width: 300,
-                          height: 300,
-                          data: url, // Replace with your URL
-                          dotsOptions: { color: "#000", type: "rounded" },
-                          backgroundOptions: { color: "#fff" }
-                        });
-                      
-                        qrCode.append(document.getElementById("qrcode"));
+                        if (newID) {
+                            generateQrCode(url.href);
+                        }
                     })
                     .catch(error => console.error("Error saving session: ", error));
             })

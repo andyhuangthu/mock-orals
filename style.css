@@ -59,6 +59,10 @@ body {
     color: var(--text-primary)
 }
 
+h1 {
+    text-align: center;
+}
+
 .cache-reload-p {
     display: none;
 }
@@ -328,6 +332,7 @@ div.container-fluid > div {
 
 .control-btn {
     display: inline-block;
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
 }
 .control-btn:not(:first-child) {
     margin-left: 5px;
@@ -408,6 +413,30 @@ div.container-fluid > div {
 .st-timer-btn:not(:disabled):hover {
     background-color: var(--theme-shade);
 }
+
+/* Qr Code */
+#passage-share-ctr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    gap: 30px;
+    background-color: var(--theme-primary);
+    color: var(--text-primary);
+    margin: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    font-family: 'Sigmar', Arial, Helvetica, sans-serif;
+}
+
+#passage-share-qr-ctr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Passages */
 
 #passages {
     margin: 0px auto;
