@@ -16,7 +16,7 @@ const db = getFirestore(app);
 
 
 const urlParams = new URLSearchParams(window.location.search);
-const sessionId = urlParams.get("session");
+var sessionId = urlParams.get("session");
 
 // Normalize reference function to clean up any extra spaces or characters
 function normalizeReference(reference) {if (reference) {
@@ -219,7 +219,7 @@ function displaySessionVerses(container, passages) {
                 // Generate a session ID and store the selected passages in Firestore
                 if (!sessionId)
                 {
-                    let sessionId = Math.random().toString(36).substring(2, 10); // Generate a simple random session ID
+                    sessionId = Math.random().toString(36).substring(2, 10); // Generate a simple random session ID
                 }
                 let selectedVerses = passages.map(passage => passage.reference);
 
