@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, getDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "GOOGLE_API_KEY",
@@ -225,7 +225,7 @@ function displaySessionVerses(container, passages) {
                 setDoc(doc(db, "sessions", sessionId), { 
                     verses: selectedVerses, 
                     jsonFile: jsonFile,
-                    expiryTime: firebase.firestore.Timestamp.fromMillis(Date.now() + 30 * 60 * 1000),
+                    expiryTime: Timestamp.fromMillis(Date.now() + 30 * 60 * 1000),
                     division: division,
                     version: version,
                     words: words,
