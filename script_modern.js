@@ -20,6 +20,64 @@ const db = getFirestore(app);
 const urlParams = new URLSearchParams(window.location.search);
 var sessionId = urlParams.get("session");
 
+
+const selectWord = (e) => {
+    let sel = undefined;
+    
+    // Check if clicked element is a span
+    if (e.target.nodeName == 'SPAN') {
+        $(e.target).toggleClass('has-error');
+        return;
+    } else if (e.target.nodeName == 'DFN') {
+        sel = window.getSelection();
+        let node = e.target.nextSibling;
+        sel.collapse(node, 0);
+        for (; node.nextSibling != null; node = node.nextSibling) {
+            if (node.nodeName == 'DFN') break;
+        }
+        if (node.nodeName == 'SUP')
+            sel.extend(node);
+        else
+            sel.extend(node, node.length);
+    }
+
+    // Check if clicked element is a paragraph (P)
+    if (e.target.nodeName == 'P') {
+        sel = window.getSelection();
+        let range = sel.getRangeAt(sel.rangeCount - 1);
+        sel.collapseToStart();
+        sel.modify('move', 'forward', 'character');
+        sel.modify('move', 'backward', 'word');
+        sel.extend(range.endContainer, range.endOffset);
+        sel.modify('extend', 'backward', 'character');
+        sel.modify('extend', 'forward', 'word');
+    }
+    
+    if (sel === undefined) return;
+    
+    let range = sel.getRangeAt(0); // Get the first selection range
+    let startNode = range.startContainer;
+    let endNode = range.endContainer;
+
+    // Create a document fragment to extract the selected content and manipulate it
+    let docFrag = range.cloneContents();
+
+    // Get all spans within the document fragment
+    let spans = docFrag.querySelectorAll('span');
+
+    // Toggle the 'has-error' class on each span within the selection
+    spans.forEach((span) => {
+        span.classList.toggle('has-error');
+    });
+
+    // Now reinsert the modified content back to the DOM
+    range.deleteContents();  // Remove the original selected content
+    range.insertNode(docFrag);  // Reinsert the modified content (with the updated spans)
+
+    // Collapse the selection to the end after the changes
+    sel.collapseToEnd();
+}
+
 // Normalize reference function to clean up any extra spaces or characters
 function normalizeReference(reference) {if (reference) {
     return reference.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -58,7 +116,7 @@ if (sessionId) {
             const sessionData = docSnapshot.data();
             console.log(sessionData.jsonFile)
             
-            fetch(`/mock-orals/2024/${sessionData.jsonFile}`)
+            fetch(`/2024/${sessionData.jsonFile}`)
                 .then(response => response.json())
                 .then(data => {
                     versesData = data;
@@ -92,39 +150,26 @@ if (sessionId) {
 }
 
 function displayVerses(container, passages) {
+    container.off('click', '.passage');
+
     passages.forEach((passage, i) => {
         container.append(`<div class="passage">
                 <div class="reference-top">
                     <span>${passage.reference}</span>
                     <span class="number">${i + 1}</span>
                 </div>
-                <p>${passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*'?\w+)/g,'<span>$1</span>')}</p>
+                <p>${passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*\'?[a-zA-Z]+)/g,'<span>$1</span>')}</p>
                 <div class="reference-bottom">
                     <span>${passage.reference}</span>
                     <a href="javascript:void(0)" onclick="clearErrors(event)">start over</a>
                 </div>
             </div>`
-        );
+        )
     });
+
+    container.on('click', '.passage', selectWord);
 }
 
-function displaySessionVerses(container, passages) {
-    passages.forEach((passage, i) => {
-        container.insertAdjacentHTML('beforeend',
-            `<div class="passage">
-                <div class="reference-top">
-                    <span>${passage.reference}</span>
-                    <span class="number">${i + 1}</span>
-                </div>
-                <p>${passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*'?\w+)/g,'<span>$1</span>')}</p>
-                <div class="reference-bottom">
-                    <span>${passage.reference}</span>
-                    <a href="javascript:void(0)" onclick="clearErrors(event)">start over</a>
-                </div>
-            </div>`
-        );
-    });
-}
 
 (() => {
     const DEBUG_URL = ""
@@ -203,7 +248,7 @@ function displaySessionVerses(container, passages) {
         
         const jsonFile = `${division.toLowerCase()}-${version.toLowerCase()}.json`
 
-        fetch(`/mock-orals/2024/${jsonFile}`)
+        fetch(`/2024/${jsonFile}`)
             .then(response => response.json())
             .then(passages => {
                 console.log(`received ${passages.length} passages`);

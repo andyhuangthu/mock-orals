@@ -111,6 +111,8 @@
                     <select id="theme" required="required">
                         <option selected="selected" value="light">Light</option>
                         <option value="dark">Dark</option>
+                        <option value="high-contrast-light">Light (High Contrast)</option>
+                        <option value="high-contrast-dark">Dark (High Contrast)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -148,7 +150,7 @@
             <div id="passage-share-qr-ctr">
                 <div id="qrcode"></div>
                 <h3>OR</h3>
-                <button id="copy-link-btn" class="control-btn theme-btn" onclick="copyShareLink()">
+                <button id="copy-link-btn" class="theme-btn" onclick="copyShareLink()">
                     <i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>
                 </button>
                 <script>
