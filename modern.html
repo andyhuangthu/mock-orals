@@ -177,7 +177,7 @@ permalink: /
             </button>
         </div>
 
-        <div id="passages">
+        <div id="passages" style="font-size:16px">
         </div>
     </div>
     </div>
@@ -211,6 +211,18 @@ permalink: /
                         document.querySelector("html").setAttribute("data-theme", theme)
                     }
                 }
+            }
+            var fontSize = localStorage.getItem("font-size")
+            if (fontSize) {
+                document.querySelectorAll(".text-size").forEach(radio => {
+                    if (radio.value == fontSize) {
+                        radio.checked = true
+                        passages.style.fontSize = radio.value
+                    }
+                    else {
+                        radio.checked = false
+                    }
+                })
             }
         }
 
@@ -273,6 +285,8 @@ permalink: /
         document.querySelectorAll(".text-size").forEach(radio => {
             radio.addEventListener("change", () => {
                 passages.style.fontSize = radio.value
+                // save to local storage
+                localStorage.setItem("font-size", radio.value)
             })
         })
 
