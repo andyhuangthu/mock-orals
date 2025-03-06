@@ -18,6 +18,7 @@ const db = getFirestore(app);
 
 
 const urlParams = new URLSearchParams(window.location.search);
+const JSON_ROOT = "/mock-orals/2024"
 var sessionId = urlParams.get("session");
 
 
@@ -116,7 +117,7 @@ if (sessionId) {
             const sessionData = docSnapshot.data();
             console.log(sessionData.jsonFile)
             
-            fetch(`/2024/${sessionData.jsonFile}`)
+            fetch(`${JSON_ROOT}/${sessionData.jsonFile}`)
                 .then(response => response.json())
                 .then(data => {
                     versesData = data;
@@ -248,7 +249,7 @@ function displayVerses(container, passages) {
         
         const jsonFile = `${division.toLowerCase()}-${version.toLowerCase()}.json`
 
-        fetch(`/2024/${jsonFile}`)
+        fetch(`${JSON_ROOT}/${jsonFile}`)
             .then(response => response.json())
             .then(passages => {
                 console.log(`received ${passages.length} passages`);
