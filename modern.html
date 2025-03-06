@@ -12,13 +12,13 @@ permalink: /
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
           integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    <link rel="stylesheet" href="/mock-orals/style.css">
+    <link rel="stylesheet" href="style.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!-- Firebase SDK -->
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
-    <script src="/mock-orals/script_modern.js" type="module"></script>
+    <script src="script_modern.js" type="module"></script>
     <script src="https://kit.fontawesome.com/06b44fd96d.js" crossorigin="anonymous"></script><link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sigmar&display=swap" rel="stylesheet">
@@ -132,22 +132,6 @@ permalink: /
         
         <h1 class="text-center">Bible Bee Mock Orals</h1>
 
-        <div id="solo-timer-ctr">
-            <div id="solo-timer">
-                <svg id="st-svg" viewBox="0 0 100 100">
-                    <g id="st-circle">
-                        <circle id="st-bg" cx="50%" cy="50%" r="45"></circle>
-                        <circle id="st-time" cx="50%" cy="50%" r="45"></circle>
-                    </g>
-                </svg>
-                <input id="st-minutes" maxlength="2" value="08" placeholder="00" type="number" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false">:<input id="st-seconds" maxlength="2" value="00" placeholder="00" type="number" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false">
-            </div>
-            <div id="st-btn-ctr">
-                <button id="st-play-btn" class="st-timer-btn">Start</button>
-                <button id="st-reset-btn" class="st-timer-btn" disabled>Reset</button>
-            </div>
-        </div>
-
         <div style="display:none" id="passage-share-ctr">
             <h1>TO SHARE:</h1>
             <div id="passage-share-qr-ctr">
@@ -162,6 +146,22 @@ permalink: /
                         document.getElementById('copy-link-btn').innerHTML = `<i class="fa-regular fa-clipboard"></i>&nbsp;Copied!`;
                     }
                 </script>
+            </div>
+        </div>
+
+        <div id="solo-timer-ctr">
+            <div id="solo-timer">
+                <svg id="st-svg" viewBox="0 0 100 100">
+                    <g id="st-circle">
+                        <circle id="st-bg" cx="50%" cy="50%" r="45"></circle>
+                        <circle id="st-time" cx="50%" cy="50%" r="45"></circle>
+                    </g>
+                </svg>
+                <input id="st-minutes" maxlength="2" value="08" placeholder="00" type="number" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false">:<input id="st-seconds" maxlength="2" value="00" placeholder="00" type="number" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false">
+            </div>
+            <div id="st-btn-ctr">
+                <button id="st-play-btn" class="st-timer-btn">Start</button>
+                <button id="st-reset-btn" class="st-timer-btn" disabled>Reset</button>
             </div>
         </div>
 

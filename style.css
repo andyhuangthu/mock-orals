@@ -262,7 +262,7 @@ div.container-fluid > div {
 
 .timer-btn {
     width: 40px;
-    height: 40px;
+    aspect-ratio: 1 / 1;
     background-color: var(--theme-primary);
     border: none;
     border-radius: 50%;
@@ -282,7 +282,9 @@ div.container-fluid > div {
 #content-ctr {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-flow: column;
+    padding: 10px;
 }
 
 #generator2 {
@@ -478,8 +480,8 @@ button.theme-btn:hover, button.theme-btn:active {
 }
 
 #qrcode {
-    border-radius: 20px;
-    height: 100px;
+    border-radius: 5px;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
 }
 
@@ -581,6 +583,66 @@ div.reference-bottom a {
     #generator2 {
         width: 400px;
         border-radius: 20px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    /* Optimize Button Sizes */
+    .theme-btn, .control-btn,  .st-timer-btn, .timer-btn {
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    .timer-btn {
+        width: 50px;
+    }
+
+    #passage-settings-ctr {
+        flex-flow: column;
+        gap: 10px;
+    }
+
+    .control-btn {
+        width: 100%;
+    }
+
+    /* QR Code sharing ctr */
+    #passage-share-qr-ctr {
+        flex-flow: column;
+        gap: 20px;
+    }
+
+    #passage-share-ctr h3 {
+        display: none;
+    }
+
+    /* Optimize Timer UI */
+
+    #timer input, #solo-timer input {
+        font-size: 40px;
+        width: 3ch;
+        padding: 5px;
+    }
+
+    #solo-timer {
+        width: 300px;
+        height: 300px;
+    }
+
+    #st-svg {
+        width: 300px;
+        height: 300px;
+    }
+
+    /* Adjust Passage Display */
+    .passage {
+        width: 95%;
+        padding: 10px;
     }
 }
 
