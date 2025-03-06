@@ -477,6 +477,10 @@ button.theme-btn:hover, button.theme-btn:active {
     font-family: 'Sigmar', Arial, Helvetica, sans-serif;
 }
 
+#qrcode {
+    border-radius: 10px;
+}
+
 /* Passages */
 
 #passages {
