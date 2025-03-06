@@ -51,7 +51,7 @@
     --bg-shade-bold: #14142b;
     --bg-mid: #1f1f3d;
     --bg-mid-bold: #2d2d52;
-    --bg-transparent-dark: #0005;
+    --bg-transparent-dark: #222b;
     --text-primary: #ffffff;
     --text-secondary: #d1d5db;
     --text-disabled: #a1a1aa;
@@ -73,7 +73,7 @@
     --bg-shade-bold: #e6ebf2;
     --bg-mid: #c2cadb;
     --bg-mid-bold: #94a3c1;
-    --bg-transparent-dark: #000a;
+    --bg-transparent-dark: #0005;
     --text-primary: #000000;
     --text-secondary: #1a1d26;
     --text-disabled: #4f5b6d;
