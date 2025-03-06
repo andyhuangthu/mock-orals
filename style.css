@@ -389,6 +389,7 @@ button.theme-btn:hover, button.theme-btn:active {
     justify-content: center;
     flex-flow: column;
     width: 100%;
+    margin: 20px 0px;
 }
 
 #solo-timer {
@@ -465,7 +466,7 @@ button.theme-btn:hover, button.theme-btn:active {
     gap: 30px;
     background-color: var(--theme-primary);
     color: var(--text-primary);
-    margin: 20px;
+    margin: 50px 0px;
     padding: 15px;
     border-radius: 10px;
     font-family: 'Sigmar', Arial, Helvetica, sans-serif;
@@ -488,6 +489,11 @@ button.theme-btn:hover, button.theme-btn:active {
 /* Passages */
 
 #passages {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
     margin: 0px auto;
     padding: 20px 0;
 }
@@ -611,7 +617,7 @@ div.reference-bottom a {
     }
 
     .control-btn {
-        width: 100%;
+        width: 90%;
     }
 
     /* QR Code sharing ctr */
@@ -626,11 +632,13 @@ div.reference-bottom a {
 
     #passage-share-ctr {
         width: 100%;
-        border-radius: none;
+        border-radius: 0px;
     }
 
     #content-ctr {
+        margin: 0px;
         padding: 0px;
+        width: 100%;
     }
 
     /* Optimize Timer UI */
