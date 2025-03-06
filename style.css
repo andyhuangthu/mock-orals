@@ -114,7 +114,7 @@ input::-webkit-inner-spin-button {
 }
 
 input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
+    -moz-appearance: textfield; /* Firefox */
 }
 
 input[type=number]::placeholder {
@@ -478,7 +478,9 @@ button.theme-btn:hover, button.theme-btn:active {
 }
 
 #qrcode {
-    border-radius: 10px;
+    border-radius: 20px;
+    height: 100px;
+    overflow: hidden;
 }
 
 /* Passages */
