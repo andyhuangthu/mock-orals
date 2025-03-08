@@ -15,10 +15,7 @@ permalink: /
     <link rel="stylesheet" href="style.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <!-- Firebase SDK -->
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
-    <script src="script_modern.js" type="module"></script>
+    <script src="solo.js" type="module"></script>
     <script src="https://kit.fontawesome.com/06b44fd96d.js" crossorigin="anonymous"></script><link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sigmar&display=swap" rel="stylesheet">
@@ -131,23 +128,6 @@ permalink: /
         </div>
         
         <h1 class="text-center">Bible Bee Mock Orals</h1>
-
-        <div style="display:none" id="passage-share-ctr">
-            <h1>TO SHARE:</h1>
-            <div id="passage-share-qr-ctr">
-                <div id="qrcode"></div>
-                <h3>OR</h3>
-                <button id="copy-link-btn" class="theme-btn" onclick="copyShareLink()">
-                    <i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>
-                </button>
-                <script>
-                    function copyShareLink() {
-                        navigator.clipboard.writeText(window.location.href);
-                        document.getElementById('copy-link-btn').innerHTML = `<i class="fa-regular fa-clipboard"></i>&nbsp;Copied!`;
-                    }
-                </script>
-            </div>
-        </div>
 
         <div id="solo-timer-ctr">
             <div id="solo-timer">
