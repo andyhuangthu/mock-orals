@@ -628,6 +628,18 @@ div.reference-bottom a {
     }
 
     /* Optimize Button Sizes */
+    .nav-pill {
+        position: relative;
+        width: 100%;
+        justify-content: center;
+        border-radius: 30px;
+        margin: 10px 0;
+    }
+    .nav-pill a {
+        flex-grow: 1;
+        text-align: center;
+        padding: 12px 20px;
+    }
     .theme-btn, .control-btn, .st-timer-btn, .timer-btn {
         font-size: 20px;
         padding: 10px;
@@ -697,6 +709,10 @@ div.reference-bottom a {
 }
 
 @media print {
+    .nav-pill {
+        display: none;
+    }
+    
     .extra-link {
         display: none;
     }
