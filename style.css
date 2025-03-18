@@ -149,6 +149,36 @@ div.container-fluid > div {
     max-width: 600px;
 }
 
+/* Navbar */
+.nav-pill {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-primary);
+    border-radius: 25px;
+    display: flex;
+    overflow: hidden;
+}
+
+.nav-pill a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-right: 2px solid var(--border-primary);
+    transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.nav-pill a:last-child {
+    border-right: none;
+}
+
+.nav-pill a:hover, .nav-pill a.active {
+    background: var(--theme-hover);
+    color: var(--text-primary);
+}
+
 #curtain {
     position: fixed;
     top: 0;
