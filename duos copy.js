@@ -1,4 +1,25 @@
-const JSON_ROOT = "/mock-orals/2024"
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, getDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+import QRCodeStyling from "https://cdn.skypack.dev/qr-code-styling";
+
+const firebaseConfig = {
+    apiKey: "GOOGLE_API_KEY",
+    authDomain: "mock-orals.firebaseapp.com",
+    projectId: "mock-orals",
+    storageBucket: "mock-orals.firebasestorage.app",
+    messagingSenderId: "980267865246",
+    appId: "1:980267865246:web:5605dfbe38d30bc3da178f",
+    measurementId: "G-SQMBFDFWR7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const JSON_ROOT = "2024"
+var sessionId = urlParams.get("session");
 
 
 const selectWord = (e) => {
@@ -56,6 +77,77 @@ const selectWord = (e) => {
 
     // Collapse the selection to the end after the changes
     sel.collapseToEnd();
+}
+
+// Normalize reference function to clean up any extra spaces or characters
+function normalizeReference(reference) {if (reference) {
+    return reference.trim().toLowerCase().replace(/\s+/g, ' ');
+    } else {
+        console.error("Reference is undefined or null:", reference); // Log undefined reference
+        return ''; // Return empty string if reference is undefined or null
+    }
+}
+
+function generateQrCode(url) {
+    document.getElementById("passage-share-ctr").style.display = "";
+    document.getElementById("qrcode").innerHTML = "";
+                      
+    const qrCode = new QRCodeStyling({
+        width: 100,
+        height: 100,
+        data: url,
+        dotsOptions: { color: "#5a90bd", type: "extra-rounded" },
+        backgroundOptions: { color: "#fff" }
+    });
+    
+    qrCode.append(document.getElementById("qrcode"));
+}
+
+if (sessionId) {
+    let versesData = []; // This will hold the data from the JSON file
+
+    // generate qr code
+    generateQrCode(window.location.href)
+
+    // Load the JSON file with verses (using fetch or a local JSON file)
+    
+    const sessionRef = doc(db, "sessions", sessionId); // Get reference to session document
+    getDoc(sessionRef).then(docSnapshot => {
+        if (docSnapshot.exists()) {
+            const sessionData = docSnapshot.data();
+            console.log(sessionData.jsonFile)
+            
+            fetch(`${JSON_ROOT}/${sessionData.jsonFile}`)
+                .then(response => response.json())
+                .then(data => {
+                    versesData = data;
+
+                    // Now filter the verses based on the session data
+                    const mode = urlParams.get("mode") || "ref"; // Default to "ref" mode if not specified
+        
+                    // Filter verses to match those in the JSON file
+                    const matchedVerses = sessionData.verses.map(verse => {
+                        const normalizedSessionReference = normalizeReference(verse);
+                        console.log("Checking for verse:", normalizedSessionReference); // Debug: log each verse being checked
+                        const matchedVerse = versesData.find(v => normalizeReference(v.reference) === normalizedSessionReference);
+                        console.log("Matched verse:", matchedVerse); // Debug: log matched verse if found
+                        return matchedVerse ? (mode === "ref" ? matchedVerse : `${matchedVerse.reference}: ${matchedVerse.text}`) : null;
+                    }).filter(Boolean); // Filter out any null values (when no match found)
+        
+                    console.log("Matched verses:", matchedVerses); // Debug: log the final matched verses
+        
+                    var container = $('#passages').html(`<h2>${sessionData.division} &mdash; ${sessionData.version}</h2><h4>${sessionData.words} words (${sessionData.wpm} words per minute)</h4>`);
+                    displayVerses(container, matchedVerses)
+                })
+            .catch(error => {
+                console.error("Error loading JSON file:", error);
+            });
+        } else {
+            alert("Session not found!");
+        }
+    }).catch(error => {
+        console.error("Error fetching session:", error);
+    });
 }
 
 function displayVerses(container, passages) {
@@ -148,8 +240,8 @@ function displayVerses(container, passages) {
 
         $('#generate, #generate-btn').click(() => {
             generatePassages();
-            $("#generator2").style.display = "none"
-            $("#curtain").style.display = "none"
+            $("#generator2").css('display', 'none')
+            $("#curtain").css('display', 'none')
         });
     });
 
@@ -190,6 +282,34 @@ function displayVerses(container, passages) {
 
                 var container = $('#passages').html(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`);
                 displayVerses(container, passages)
+
+                // Generate a session ID and store the selected passages in Firestore
+                var newID = false
+                if (!sessionId)
+                {
+                    sessionId = Math.random().toString(36).substring(2, 10); // Generate a simple random session ID
+                    newID = true
+                }
+                let selectedVerses = passages.map(passage => passage.reference);
+
+                setDoc(doc(db, "sessions", sessionId), { 
+                    verses: selectedVerses, 
+                    jsonFile: jsonFile,
+                    expiryTime: Timestamp.fromMillis(Date.now() + 30 * 60 * 1000),
+                    division: division,
+                    version: version,
+                    words: words,
+                    wpm: Math.round(wpm),
+                })
+                    .then(() => {
+                        var url = new URL(window.location);
+                        url.searchParams.set("session", sessionId);
+                        window.history.pushState({}, "", url);
+                        if (newID) {
+                            generateQrCode(url.href);
+                        }
+                    })
+                    .catch(error => console.error("Error saving session: ", error));
             })
             .catch(error => {
                 console.error(error)

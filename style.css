@@ -511,6 +511,8 @@ button.theme-btn:hover, button.theme-btn:active {
 }
 
 #qrcode {
+    padding: 10px;
+    background-color: #fff;
     border-radius: 5px;
     aspect-ratio: 1 / 1;
     overflow: hidden;

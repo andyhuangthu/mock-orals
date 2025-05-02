@@ -240,6 +240,8 @@ function displayVerses(container, passages) {
 
         $('#generate, #generate-btn').click(() => {
             generatePassages();
+            $("#generator2").style.display = "none"
+            $("#curtain").style.display = "none"
         });
     });
 
