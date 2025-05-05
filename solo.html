@@ -127,7 +127,7 @@ permalink: /
                     <button id="generate" type="button" class="theme-btn">Generate</button> 12 passages to recite in 8 minutes
                 </div>
             </div>
-            <div id="close">&times;</div>
+            <div id="close-generator-btn" class="close-btn">&times;</div>
             <div id="errors" class="text-danger"></div>
         </div>
         
@@ -162,10 +162,13 @@ permalink: /
         </div>
 
         <div id="passages" style="font-size:16px">
+            <div id="passages-ctr"></div>
         </div>
     </div>
     </div>
     <script>
+        var timerOpen = true
+
         // load local storage
         const themeSelector = document.querySelector("#theme")
         const versionSelector = document.querySelector("#version")
@@ -216,18 +219,23 @@ permalink: /
         window.addEventListener("scroll", () => {
             if (!optionbarAnimating)
             {
-                // console.log(window.scrollY, timer_open)
-                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName) && timer_open) {
+                // console.log(window.scrollY, timerOpen)
+                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName) && timerOpen) {
                     optionbar.style.animationName = "optionbar-appear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
-                else if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear" && timer_open) {
+                else if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear" && timerOpen) {
                     optionbar.style.animationName = "optionbar-disappear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
 
+            }
+            else if (window.scrollY <= 100 && timerOpen) {
+                optionbar.style.animationName = "optionbar-disappear"
+                optionbar.style.animationPlayState = "running"
+                optionbarAnimating = true
             }
         })
 
@@ -236,7 +244,7 @@ permalink: /
         })
 
         // close settings
-        const closeGenerator = document.querySelector("#close")
+        const closeGenerator = document.querySelector("#close-generator-btn")
         const generator = document.querySelector("#generator2")
         const curtain = document.querySelector("#curtain")
         closeGenerator.addEventListener("click", () => {
@@ -476,11 +484,11 @@ permalink: /
         // open or close timer
         const controlTimer = document.querySelector("#close-timer-btn")
         const soloTimerCtr = document.querySelector("#solo-timer-ctr")
-        var timer_open = true
+        
         controlTimer.addEventListener("click", () => {
-            if (timer_open) {
+            if (timerOpen) {
                 controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
-                timer_open = false
+                timerOpen = false
                 optionbar.style.display = "none"
                 soloTimerCtr.style.display = "none"
                 if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName)) {
@@ -491,7 +499,7 @@ permalink: /
             }
             else {
                 controlTimer.querySelector("span").innerHTML = "&nbsp;Close Timer"
-                timer_open = true
+                timerOpen = true
                 optionbar.style.display = ""
                 soloTimerCtr.style.display = ""
                 if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear") {

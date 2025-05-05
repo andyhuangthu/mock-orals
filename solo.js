@@ -1,5 +1,6 @@
 const JSON_ROOT = "/mock-orals/2024"
 
+const passagesCtr = document.querySelector('#passages-ctr');
 
 const selectWord = (e) => {
     let sel = undefined;
@@ -148,8 +149,9 @@ function displayVerses(container, passages) {
 
         $('#generate, #generate-btn').click(() => {
             generatePassages();
-            $("#generator2").style.display = "none"
-            $("#curtain").style.display = "none"
+            console.log($('#generator2'));
+            $("#generator2").css('display', 'none')
+            $("#curtain").css('display', 'none')
         });
     });
 
@@ -189,7 +191,9 @@ function displayVerses(container, passages) {
                 }
 
                 var container = $('#passages').html(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`);
-                displayVerses(container, passages)
+                passagesCtr.innerHTML = "";
+                container.append(passagesCtr);
+                displayVerses($('#passages-ctr'), passages);
             })
             .catch(error => {
                 console.error(error)
