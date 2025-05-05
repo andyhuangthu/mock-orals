@@ -120,14 +120,16 @@
                 }
             }
             if (attempt >= 1000000) {
-                $('#passages').html($('<span class="text-danger">Maximum attempts reached. Please adjust parameters and try again.</span>'));
+                $('#passages-ctr').html($('<span class="text-danger">Maximum attempts reached. Please adjust parameters and try again.</span>'));
                 $('#generate').prop('disabled', false);
                 return;
             }
 
+            let passagesCtr = $('#passages-ctr').html('')
             let container = $('#passages').html($(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`));
+            container.append(passagesCtr);
             passages.forEach(function (passage, i) {
-                container.append(
+                $('#passages-ctr').append(
                     $('<div class="passage"></div>').append(
                         $('<div class="reference-top"></div>').append(
                             $('<span></span>').text(passage.reference),
@@ -140,7 +142,7 @@
                 );
             });
         }).fail(function (request, status, error) {
-            $('#passages').html($('<span class="text-danger"></span>').text(`${status}: ${error}`));
+            $('#passages-ctr').html($('<span class="text-danger"></span>').text(`${status}: ${error}`));
         }).always(function () {
             $('#generate').prop('disabled', false);
         });
