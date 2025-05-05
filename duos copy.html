@@ -1,12 +1,9 @@
----
-permalink: /duos/
----
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Cache-Control" content="no-store" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <title>Mock Orals</title>
 
@@ -19,7 +16,8 @@ permalink: /duos/
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
     <script src="duos copy.js" type="module"></script>
-    <script src="https://kit.fontawesome.com/06b44fd96d.js" crossorigin="anonymous"></script><link rel="preconnect" href="https://fonts.googleapis.com">
+    <script src="https://kit.fontawesome.com/06b44fd96d.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sigmar&display=swap" rel="stylesheet">
 </head>
@@ -30,9 +28,18 @@ permalink: /duos/
         <a href="">Solo</a>
         <a href="duos/">Duos</a>
     </div>
+    <div class="view-pill">
+        <select name="view" id="view">
+            <option value="judge" selected>Judge View</option>
+            <option value="contestant">Contestant View</option>
+        </select>
+        <button id="settings-btn-2" class="theme-btn" title="Open Settings">
+            <i class="fa-solid fa-gear"></i><span>&nbsp;Settings</span>
+        </button>
+    </div>
     <!-- TODO: Create different pages: contestant view, judge view, settings page, and landing page -->    
     <div id="curtain"></div>
-    <div id="optionbar">
+    <div id="optionbar" style="display: none;">
         <div id="center-options-ctr">
             <button id="play-btn" class="timer-btn">
                 <i class="fa-solid fa-play"></i>
@@ -100,21 +107,17 @@ permalink: /duos/
                     </select>
                 </div>
                 <div class="form-group">
-                    <input type="checkbox" name="hide-text" id="hide-text">
-                    <label for="hide-text">Hide Text</label>
-                </div>
-                <div class="form-group">
                     <button id="generate" type="button" class="theme-btn">Generate</button> 12 passages to recite in 8 minutes
                 </div>
             </div>
-            <div id="close">&times;</div>
+            <div id="close-generator-btn" class="close-btn">&times;</div>
             <div id="errors" class="text-danger"></div>
         </div>
         
         <h1 class="text-center">Bible Bee Mock Orals</h1>
 
-        <div style="display:none" id="passage-share-ctr">
-            <h1>TO SHARE:</h1>
+        <div id="passage-share-ctr" style="display:none;">
+            <h1>TO INVITE:</h1>
             <div id="passage-share-qr-ctr">
                 <div id="qrcode"></div>
                 <h3>OR</h3>
@@ -128,9 +131,11 @@ permalink: /duos/
                     }
                 </script>
             </div>
+
+            <div id="close-share-ctr-btn" class="close-btn">&times;</div>
         </div>
 
-        <div id="solo-timer-ctr">
+        <div id="solo-timer-ctr" display="none">
             <div id="solo-timer">
                 <svg id="st-svg" viewBox="0 0 100 100">
                     <g id="st-circle">
@@ -147,26 +152,45 @@ permalink: /duos/
         </div>
 
         <div id="passage-settings-ctr">
-            <button id="generate-btn" class="control-btn theme-btn">
+            <button id="generate-btn" class="control-btn theme-btn" title="Generate Passages">
                 <i class="fa-solid fa-repeat"></i><span>&nbsp;Generate</span>
             </button>
-            <button id="settings-btn" class="control-btn theme-btn">
+            <button id="settings-btn" class="control-btn theme-btn" title="Open Settings">
                 <i class="fa-solid fa-gear"></i><span>&nbsp;Settings</span>
             </button>
-            <button id="close-timer-btn" class="control-btn theme-btn">
+            <button id="close-timer-btn" class="control-btn theme-btn" title="Open/Close Timer">
                 <i class="fa-regular fa-clock"></i><span>&nbsp;Close Timer</span>
+            </button>
+            <button id="invite-btn" class="control-btn theme-btn" title="Invite Friends" disabled>
+                <i class="fa-solid fa-user-plus"></i><span>&nbsp;Invite</span>
             </button>
         </div>
 
         <div id="passages" style="font-size:16px">
+            <div id="passages-ctr" class="flashcards-ctr"></div>
+        </div>
+        <div id="shuffle-btn-div" style="text-align:center; margin-top: 20px;">
+            <button id="prevCard">←</button>
+            <button id="nextCard">→</button>
         </div>
     </div>
     </div>
     <script>
+        var VIEW;
+        const passages = document.querySelector("#passages")
         // load local storage
         const themeSelector = document.querySelector("#theme")
         const versionSelector = document.querySelector("#version")
         const divisionSelector = document.querySelector("#division")
+        const viewSelector = document.querySelector(".view-pill select")
+        const passagesCtr = document.querySelector("#passages-ctr")
+        const shuffleCtr = document.querySelector("#shuffle-btn-div")
+
+
+        const soloTimerCtr = document.querySelector("#solo-timer-ctr")
+        var timerOpen = false
+        
+        
         window.onload = () => {
             var version = localStorage.getItem("version")
             if (version) {
@@ -205,6 +229,44 @@ permalink: /duos/
                     }
                 })
             }
+            var view = localStorage.getItem("view")
+            if (view) {
+                for (let i = 0; i < viewSelector.options.length; i++) {
+                    if (viewSelector.options[i].value == view) {
+                        viewSelector.options[i].selected = true
+                        VIEW = viewSelector.value
+                        if (viewSelector.value == "judge") {
+                            passages.classList.remove("hide-text-ctr");
+                            passagesCtr.classList.remove("contestant-view");
+                            passagesCtr.classList.add("judge-view");  
+                            passagesCtr.style.flexFlow = "";
+                            passagesCtr.style.transform = "";
+                            shuffleCtr.style.display = "none";
+                        }
+                        else {
+                            passages.classList.add("hide-text-ctr");
+                            passagesCtr.classList.add("contestant-view");
+                            passagesCtr.classList.remove("judge-view");
+                            passagesCtr.style.transform = `translateX(0%)`;
+                            shuffleCtr.style.display = "";
+                        }
+                    }
+                }
+            }
+            var closeTimer = localStorage.getItem("close-timer")
+            if (closeTimer) {
+                if (closeTimer == "true") {
+                    optionbar.style.display = "none"
+                    soloTimerCtr.style.display = "none"
+                    controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
+                }
+                else {
+                    optionbar.style.display = ""
+                    soloTimerCtr.style.display = ""
+                    controlTimer.querySelector("span").innerHTML = "&nbsp;Close Timer"
+                }
+                timerOpen = closeTimer == "true" ? false : true
+            }
         }
 
         // sense scroll
@@ -214,17 +276,22 @@ permalink: /duos/
             if (!optionbarAnimating)
             {
                 // console.log(window.scrollY, timer_open)
-                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName) && timer_open) {
+                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName) && timerOpen) {
                     optionbar.style.animationName = "optionbar-appear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
-                else if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear" && timer_open) {
+                else if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear" && timerOpen) {
                     optionbar.style.animationName = "optionbar-disappear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
 
+            }
+            else if (window.scrollY <= 100 && timerOpen) {
+                optionbar.style.animationName = "optionbar-disappear"
+                optionbar.style.animationPlayState = "running"
+                optionbarAnimating = true
             }
         })
 
@@ -232,35 +299,99 @@ permalink: /duos/
             optionbarAnimating = false
         })
 
-        // close settings
-        const closeGenerator = document.querySelector("#close")
-        const generator = document.querySelector("#generator2")
-        const curtain = document.querySelector("#curtain")
-        closeGenerator.addEventListener("click", () => {
-            generator.style.display = "none"
-            curtain.style.display = "none"
-        })
         
+        const closeGenerator = document.querySelector("#close-generator-btn");
+        const closeShare = document.querySelector("#close-share-ctr-btn");
+        const generator = document.querySelector("#generator2");
+        const curtain = document.querySelector("#curtain");
+        const controlGenerator = document.querySelector("#settings-btn");
+        const controlGenerator2 = document.querySelector("#settings-btn-2");
+
+
+        const inviteBtn = document.querySelector("#invite-btn");
+        const passageShareCtr = document.querySelector("#passage-share-ctr");
+
         // open settings
-        const controlGenerator = document.querySelector("#settings-btn")
-        controlGenerator.addEventListener("click", () => {
-            generator.style.display = ""
-            curtain.style.display = ""
+        document.addEventListener("DOMContentLoaded", () => {
+
+            [controlGenerator, controlGenerator2].forEach(btn => {
+                if (btn) {
+                    btn.addEventListener("click", () => {
+                        generator.style.display = "";
+                        curtain.style.display = "";
+                        document.querySelector("#version").focus();
+                    });
+                }
+            });
+
+            // close settings
+            [closeGenerator, curtain, closeShare].forEach(ele => {
+                ele.addEventListener("click", () => {
+                    generator.style.display = "none"
+                    curtain.style.display = "none"
+                    passageShareCtr.style.display = "none"
+                })
+            }) 
+
+
+            // view options
+            VIEW = viewSelector.value
+            viewSelector.addEventListener("change", () => {
+                VIEW = viewSelector.value
+                localStorage.setItem("view", VIEW)
+                if (viewSelector.value == "judge") {
+                    passages.classList.remove("hide-text-ctr");
+                    passagesCtr.classList.remove("contestant-view");
+                    passagesCtr.classList.add("judge-view");  
+                    passagesCtr.style.flexFlow = "";
+                    passagesCtr.style.transform = "";
+                    shuffleCtr.style.display = "none";
+                    currentCardIndex = 0;
+                }
+                else {
+                    passages.classList.add("hide-text-ctr");
+                    passagesCtr.classList.add("contestant-view");
+                    passagesCtr.classList.remove("judge-view");
+                    passagesCtr.style.transform = `translateX(0%)`;
+                    shuffleCtr.style.display = "";
+                    currentCardIndex = 0;
+                }
+            })
+
+            // shuffle cards
+            let currentCardIndex = 0;
+            let flashcards = 12;
+            let gap = 40;
+
+            function updateCardPosition() {
+                const offset = -currentCardIndex * 100;
+                passagesCtr.style.transform = `translateX(calc(${offset}% - ${gap * currentCardIndex}px))`;
+            }
+
+
+            document.getElementById("prevCard").addEventListener("click", () => {
+                if (currentCardIndex > 0) {
+                    currentCardIndex--;
+                    updateCardPosition();
+                }
+            });
+
+            document.getElementById("nextCard").addEventListener("click", () => {
+                console.log(currentCardIndex, flashcards)
+                if (currentCardIndex < flashcards - 1) {
+                    currentCardIndex++;
+                    updateCardPosition();
+                }
+            });
+        });
+
+        // open invite
+        inviteBtn.addEventListener("click", () => {
+            passageShareCtr.style.display = "flex";
+            curtain.style.display = "";
         })
 
         // passage settings
-        // hide text
-        const passages = document.querySelector("#passages")
-        const hideTextCheck = document.querySelector("#hide-text")
-
-        hideTextCheck.addEventListener("change", () => {
-            if (hideTextCheck.checked) {
-                passages.classList.add("hide-text-ctr")
-            }
-            else {
-                passages.classList.remove("hide-text-ctr")
-            }
-        })
 
         // change font size
         document.querySelectorAll(".text-size").forEach(radio => {
@@ -472,12 +603,11 @@ permalink: /duos/
 
         // open or close timer
         const controlTimer = document.querySelector("#close-timer-btn")
-        const soloTimerCtr = document.querySelector("#solo-timer-ctr")
-        var timer_open = true
+
         controlTimer.addEventListener("click", () => {
-            if (timer_open) {
+            if (timerOpen) {
                 controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
-                timer_open = false
+                timerOpen = false
                 optionbar.style.display = "none"
                 soloTimerCtr.style.display = "none"
                 if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName)) {
@@ -485,10 +615,11 @@ permalink: /duos/
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
+                localStorage.setItem("close-timer", true)
             }
             else {
                 controlTimer.querySelector("span").innerHTML = "&nbsp;Close Timer"
-                timer_open = true
+                timerOpen = true
                 optionbar.style.display = ""
                 soloTimerCtr.style.display = ""
                 if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear") {
@@ -496,6 +627,7 @@ permalink: /duos/
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
+                localStorage.setItem("close-timer", false)
             }
         })
     </script>

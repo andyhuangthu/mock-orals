@@ -16,12 +16,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-
 const urlParams = new URLSearchParams(window.location.search);
 const JSON_ROOT = "/mock-orals/2024"
 var sessionId = urlParams.get("session");
 
+const passagesCtr = document.querySelector('#passages-ctr');
 
+// Function to select errors on the selected passage
 const selectWord = (e) => {
     let sel = undefined;
     
@@ -79,6 +80,11 @@ const selectWord = (e) => {
     sel.collapseToEnd();
 }
 
+// Function to clear errors on the selected passage
+const clearErrors = (e) =>{
+    $(e.target).closest('.passage').find('.has-error').removeClass('has-error');
+};
+
 // Normalize reference function to clean up any extra spaces or characters
 function normalizeReference(reference) {if (reference) {
     return reference.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -89,7 +95,7 @@ function normalizeReference(reference) {if (reference) {
 }
 
 function generateQrCode(url) {
-    document.getElementById("passage-share-ctr").style.display = "";
+    document.getElementById("invite-btn").disabled = false;
     document.getElementById("qrcode").innerHTML = "";
                       
     const qrCode = new QRCodeStyling({
@@ -97,7 +103,8 @@ function generateQrCode(url) {
         height: 100,
         data: url,
         dotsOptions: { color: "#5a90bd", type: "extra-rounded" },
-        backgroundOptions: { color: "#fff" }
+        backgroundOptions: { color: "#fff" },
+        errorCorrectionLevel: 'L',
     });
     
     qrCode.append(document.getElementById("qrcode"));
@@ -134,10 +141,12 @@ if (sessionId) {
                         return matchedVerse ? (mode === "ref" ? matchedVerse : `${matchedVerse.reference}: ${matchedVerse.text}`) : null;
                     }).filter(Boolean); // Filter out any null values (when no match found)
         
-                    console.log("Matched verses:", matchedVerses); // Debug: log the final matched verses
+                    // console.log("Matched verses:", matchedVerses); // Debug: log the final matched verses
         
                     var container = $('#passages').html(`<h2>${sessionData.division} &mdash; ${sessionData.version}</h2><h4>${sessionData.words} words (${sessionData.wpm} words per minute)</h4>`);
-                    displayVerses(container, matchedVerses)
+                    container.append(passagesCtr)
+                    displayVerses($('#passages-ctr'), matchedVerses)
+
                 })
             .catch(error => {
                 console.error("Error loading JSON file:", error);
@@ -150,6 +159,7 @@ if (sessionId) {
     });
 }
 
+// Function to display verses in the container
 function displayVerses(container, passages) {
     container.off('click', '.passage');
 
@@ -159,16 +169,25 @@ function displayVerses(container, passages) {
                     <span>${passage.reference}</span>
                     <span class="number">${i + 1}</span>
                 </div>
-                <p>${passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*\'?[a-zA-Z]+)/g,'<span>$1</span>')}</p>
+                <div class="passage-content">
+                    <p>${passage.cards.join(' ').replace(/\(\s*(\d+)\s*\)/g, '<dfn>($1)</dfn>').replace(/(?<!<[^>]*)([a-zA-Z]*\'?[a-zA-Z]+)/g,'<span>$1</span>')}</p>
+                </div>
                 <div class="reference-bottom">
                     <span>${passage.reference}</span>
-                    <a href="javascript:void(0)" onclick="clearErrors(event)">start over</a>
+                    <a href="javascript:void(0)">start over</a>
                 </div>
             </div>`
         )
     });
 
-    container.on('click', '.passage', selectWord);
+    container.on('click', '.passage', e => {
+        if (VIEW == 'judge') {
+            console.log(VIEW)
+            selectWord(e);
+        }
+    });
+
+    container.on('click', '.reference-bottom a', clearErrors)
 }
 
 
@@ -240,8 +259,8 @@ function displayVerses(container, passages) {
 
         $('#generate, #generate-btn').click(() => {
             generatePassages();
-            $("#generator2").style.display = "none"
-            $("#curtain").style.display = "none"
+            $("#generator2").css('display', 'none')
+            $("#curtain").css('display', 'none')
         });
     });
 
@@ -280,8 +299,11 @@ function displayVerses(container, passages) {
                     return;
                 }
 
+                
                 var container = $('#passages').html(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`);
-                displayVerses(container, passages)
+                passagesCtr.innerHTML = ''
+                container.append(passagesCtr)
+                displayVerses($('#passages-ctr'), passages)
 
                 // Generate a session ID and store the selected passages in Firestore
                 var newID = false
@@ -328,9 +350,5 @@ function displayVerses(container, passages) {
             chosen.push(items[indices.splice(i, 1)[0]]);
         }
         return chosen;
-    };
-
-    const clearErrors = (e) => {
-        $(e.target).closest('.passage').find('.has-error').removeClass('has-error');
     };
 })();
