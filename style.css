@@ -612,6 +612,7 @@ button.theme-btn:hover, button.theme-btn:active {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-flow: column;
     gap: 40px;
     width: clamp(300px, 95vw, 600px);
     position: relative;
