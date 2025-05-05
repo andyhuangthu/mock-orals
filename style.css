@@ -608,6 +608,16 @@ button.theme-btn:hover, button.theme-btn:active {
     margin: 0;
 }
 
+#passages-ctr.judge-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    width: clamp(300px, 95vw, 600px);
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+}
+
 #passages-ctr.judge-view .passage {
     position: relative;
     flex-shrink: 0;
