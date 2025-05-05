@@ -283,6 +283,12 @@ permalink: /duos/
                 }
                 timerOpen = closeTimer == "true" ? false : true
             }
+            else {
+                optionbar.style.display = "none"
+                soloTimerCtr.style.display = "none"
+                controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
+                timerOpen = false
+            }
         }
 
         // sense scroll
