@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot, Timestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 import QRCodeStyling from "https://cdn.skypack.dev/qr-code-styling";
 
@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const urlParams = new URLSearchParams(window.location.search);
-const JSON_ROOT = "/mock-orals/2024"
+const JSON_ROOT = "2024"
 var sessionId = urlParams.get("session");
 
 const passagesCtr = document.querySelector('#passages-ctr');
@@ -110,6 +110,49 @@ function generateQrCode(url) {
     qrCode.append(document.getElementById("qrcode"));
 }
 
+function loadUpdates(sessionRef) {
+    // Listen for real-time updates to the session document
+    onSnapshot(sessionRef, (docSnapshot) => {
+        if (docSnapshot.exists()) {
+            const sessionData = docSnapshot.data();
+            console.log("Session updated:", sessionData);
+
+            // Fetch the JSON file if necessary
+            fetch(`${JSON_ROOT}/${sessionData.jsonFile}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Fetched JSON data:", data);
+                    var versesData = data;
+
+                    // Filter the verses based on the session data
+                    const mode = urlParams.get("mode") || "ref"; // Default to "ref" mode if not specified
+
+                    const matchedVerses = sessionData.verses.map(verse => {
+                        const normalizedSessionReference = normalizeReference(verse);
+                        console.log("Checking for verse:", normalizedSessionReference); // Debug: log each verse being checked
+                        const matchedVerse = versesData.find(v => normalizeReference(v.reference) === normalizedSessionReference);
+                        console.log("Matched verse:", matchedVerse); // Debug: log matched verse if found
+                        return matchedVerse ? (mode === "ref" ? matchedVerse : `${matchedVerse.reference}: ${matchedVerse.text}`) : null;
+                    }).filter(Boolean); // Filter out any null values (when no match found)
+
+                    // Update the UI with the new data
+                    const container = $('#passages').html(`<h2>${sessionData.division} &mdash; ${sessionData.version}</h2><h4>${sessionData.words} words (${sessionData.wpm} words per minute)</h4>`);
+                    passagesCtr.innerHTML = '';
+                    container.append(passagesCtr);
+                    displayVerses($('#passages-ctr'), matchedVerses);
+                })
+                .catch(error => {
+                    console.error("Error loading JSON file:", error);
+                });
+        } else {
+            console.error("Session document does not exist!");
+        }
+    }, (error) => {
+        console.error("Error listening to session updates:", error);
+    });
+}
+
+
 if (sessionId) {
     let versesData = []; // This will hold the data from the JSON file
 
@@ -122,7 +165,7 @@ if (sessionId) {
     getDoc(sessionRef).then(docSnapshot => {
         if (docSnapshot.exists()) {
             const sessionData = docSnapshot.data();
-            console.log(sessionData.jsonFile)
+            // console.log(sessionData.jsonFile)
             
             fetch(`${JSON_ROOT}/${sessionData.jsonFile}`)
                 .then(response => response.json())
@@ -135,9 +178,9 @@ if (sessionId) {
                     // Filter verses to match those in the JSON file
                     const matchedVerses = sessionData.verses.map(verse => {
                         const normalizedSessionReference = normalizeReference(verse);
-                        console.log("Checking for verse:", normalizedSessionReference); // Debug: log each verse being checked
+                        // console.log("Checking for verse:", normalizedSessionReference); // Debug: log each verse being checked
                         const matchedVerse = versesData.find(v => normalizeReference(v.reference) === normalizedSessionReference);
-                        console.log("Matched verse:", matchedVerse); // Debug: log matched verse if found
+                        // console.log("Matched verse:", matchedVerse); // Debug: log matched verse if found
                         return matchedVerse ? (mode === "ref" ? matchedVerse : `${matchedVerse.reference}: ${matchedVerse.text}`) : null;
                     }).filter(Boolean); // Filter out any null values (when no match found)
         
@@ -146,6 +189,7 @@ if (sessionId) {
                     var container = $('#passages').html(`<h2>${sessionData.division} &mdash; ${sessionData.version}</h2><h4>${sessionData.words} words (${sessionData.wpm} words per minute)</h4>`);
                     container.append(passagesCtr)
                     displayVerses($('#passages-ctr'), matchedVerses)
+                    loadUpdates(sessionRef);
 
                 })
             .catch(error => {
@@ -182,7 +226,7 @@ function displayVerses(container, passages) {
 
     container.on('click', '.passage', e => {
         if (VIEW == 'judge') {
-            console.log(VIEW)
+            // console.log(VIEW)
             selectWord(e);
         }
     });
@@ -273,11 +317,11 @@ function displayVerses(container, passages) {
         fetch(`${JSON_ROOT}/${jsonFile}`)
             .then(response => response.json())
             .then(passages => {
-                console.log(`received ${passages.length} passages`);
+                // console.log(`received ${passages.length} passages`);
                 let max_words = Number(valueOf($('#max_words')));
                 if (!isNaN(max_words)) {
                     passages = passages.filter(passage => passage.word_count <= max_words);
-                    console.log(`${passages.length} passages remaining after filtering`);
+                    // console.log(`${passages.length} passages remaining after filtering`);
                 }
 
                 let min_wpm = Number(valueOf($('#min_wpm'))),
@@ -288,7 +332,7 @@ function displayVerses(container, passages) {
                     words = picked.reduce((total, p) => total + p.word_count, 0);
                     wpm = words / 8;
                     if (min_wpm <= wpm && wpm <= max_wpm) {
-                        console.log(`words = ${words}, wpm = ${wpm}`);
+                        // console.log(`words = ${words}, wpm = ${wpm}`);
                         passages = picked;
                         break;
                     }
@@ -313,8 +357,9 @@ function displayVerses(container, passages) {
                     newID = true
                 }
                 let selectedVerses = passages.map(passage => passage.reference);
+                let sessionRef = doc(db, "sessions", sessionId);
 
-                setDoc(doc(db, "sessions", sessionId), { 
+                setDoc(sessionRef, { 
                     verses: selectedVerses, 
                     jsonFile: jsonFile,
                     expiryTime: Timestamp.fromMillis(Date.now() + 30 * 60 * 1000),
@@ -332,6 +377,10 @@ function displayVerses(container, passages) {
                         }
                     })
                     .catch(error => console.error("Error saving session: ", error));
+
+                
+                // Load updates for the session
+                loadUpdates(sessionRef);
             })
             .catch(error => {
                 console.error(error)
