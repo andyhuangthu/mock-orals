@@ -613,7 +613,7 @@ button.theme-btn:hover, button.theme-btn:active {
     align-items: center;
     justify-content: center;
     flex-flow: column;
-    gap: 40px;
+    gap: 20px;
     width: clamp(300px, 95vw, 600px);
     position: relative;
     transition: transform 0.3s ease-in-out;
