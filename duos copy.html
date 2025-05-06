@@ -11,6 +11,11 @@
           integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 
+
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!-- Firebase SDK -->
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
@@ -24,9 +29,9 @@
 
 <body>
     <div class="nav-pill">
-        <a href="classic/">Classic</a>
-        <a href="">Solo</a>
-        <a href="duos/" class="active">Duos</a>
+        <a href="/mock-orals/classic/">Classic</a>
+        <a href="/mock-orals/">Solo</a>
+        <a href="/mock-orals/duos/" class="active">Duos</a>
     </div>
     <div class="view-pill">
         <select name="view" id="view">
@@ -171,9 +176,9 @@
         </div>
 
         <div id="passages" style="font-size:16px">
-            <div id="passages-ctr" class="flashcards-ctr"></div>
+            <div id="passages-ctr" class="flashcards-ctr judge-view"></div>
         </div>
-        <div id="shuffle-btn-ctr" style="text-align:center; margin-top: 20px;">
+        <div id="shuffle-btn-ctr" style="display:none; text-align:center; margin-top: 20px;">
             <button id="prevCard">←</button>
             <button id="nextCard">→</button>
         </div>
@@ -252,7 +257,6 @@
                             passagesCtr.classList.add("contestant-view");
                             passagesCtr.classList.remove("judge-view");
                             passagesCtr.style.transform = `translateX(0%)`;
-
                             if (passagesCtr.innerHTML == "") {
                                 shuffleCtr.style.display = "none";
                             }
@@ -276,6 +280,12 @@
                     controlTimer.querySelector("span").innerHTML = "&nbsp;Close Timer"
                 }
                 timerOpen = closeTimer == "true" ? false : true
+            }
+            else {
+                optionbar.style.display = "none"
+                soloTimerCtr.style.display = "none"
+                controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
+                timerOpen = false
             }
         }
 
@@ -404,7 +414,7 @@
         inviteBtn.addEventListener("click", () => {
             passageShareCtr.style.display = "flex";
             curtain.style.display = "";
-            document.querySelector('#copy-link-btn').innerHTML = `<i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>`;
+            document.querySelector('#copy-link-btn').innerHTML = `<i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>`
         })
 
         // passage settings
@@ -650,3 +660,4 @@
     <script> </script>
 </body>
 </html>
+

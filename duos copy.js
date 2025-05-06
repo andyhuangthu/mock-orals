@@ -122,9 +122,9 @@ function generateQrCode(url) {
             height: 200,
         });
     }
-
     
     qrCode.append(document.getElementById("qrcode"));
+
 
     let widthBefore = window.innerWidth;
     window.addEventListener("resize", debounce(() => {
@@ -143,10 +143,8 @@ function generateQrCode(url) {
         }
         widthBefore = window.innerWidth;
     }
-    , 300) // 1 second delay
+    , 300) // 300 millisecond delay
     )
-
-    
 }
 
 function loadUpdates(sessionRef) {
@@ -179,10 +177,6 @@ function loadUpdates(sessionRef) {
                     passagesCtr.innerHTML = '';
                     container.append(passagesCtr);
                     displayVerses($('#passages-ctr'), matchedVerses);
-
-                    if (VIEW == 'contestant') {
-                        shuffleCtr.style.display = "";
-                    }
                 })
                 .catch(error => {
                     console.error("Error loading JSON file:", error);
@@ -232,10 +226,11 @@ if (sessionId) {
                     var container = $('#passages').html(`<h2>${sessionData.division} &mdash; ${sessionData.version}</h2><h4>${sessionData.words} words (${sessionData.wpm} words per minute)</h4>`);
                     container.append(passagesCtr)
                     displayVerses($('#passages-ctr'), matchedVerses);
+                    document.getElementById("share-code").innerHTML = sessionId;
+
                     if (VIEW == 'contestant') {
                         shuffleCtr.style.display = "";
                     }
-
                     loadUpdates(sessionRef);
 
                 })
@@ -394,9 +389,13 @@ function displayVerses(container, passages) {
                 
                 var container = $('#passages').html(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`);
                 passagesCtr.innerHTML = ''
-                container.append(passagesCtr)
-                displayVerses($('#passages-ctr'), passages)
+                container.append(passagesCtr);
+                displayVerses($('#passages-ctr'), passages);
                 document.getElementById("share-code").innerHTML = sessionId;
+
+                if (VIEW == 'contestant') {
+                    shuffleCtr.style.display = "";
+                }
 
                 // Generate a session ID and store the selected passages in Firestore
                 var newID = false

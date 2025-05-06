@@ -391,7 +391,6 @@ function displayVerses(container, passages) {
                 passagesCtr.innerHTML = ''
                 container.append(passagesCtr);
                 displayVerses($('#passages-ctr'), passages);
-                document.getElementById("share-code").innerHTML = sessionId;
 
                 if (VIEW == 'contestant') {
                     shuffleCtr.style.display = "";
@@ -404,6 +403,8 @@ function displayVerses(container, passages) {
                     sessionId = Math.random().toString(36).substring(2, 10); // Generate a simple random session ID
                     newID = true
                 }
+                document.getElementById("share-code").innerHTML = sessionId;
+                
                 let selectedVerses = passages.map(passage => passage.reference);
                 let sessionRef = doc(db, "sessions", sessionId);
 
