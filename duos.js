@@ -21,6 +21,7 @@ const JSON_ROOT = "/mock-orals/2024"
 var sessionId = urlParams.get("session");
 
 const passagesCtr = document.querySelector('#passages-ctr');
+const shuffleCtr = document.querySelector('#shuffle-btn-ctr');
 
 // Function to select errors on the selected passage
 const selectWord = (e) => {
@@ -94,6 +95,14 @@ function normalizeReference(reference) {if (reference) {
     }
 }
 
+function debounce(fn, delay) {
+    let timer;
+    return function () {
+      clearTimeout(timer);
+      timer = setTimeout(fn, delay);
+    };
+}
+
 function generateQrCode(url) {
     document.getElementById("invite-btn").disabled = false;
     document.getElementById("qrcode").innerHTML = "";
@@ -106,8 +115,36 @@ function generateQrCode(url) {
         backgroundOptions: { color: "#fff" },
         errorCorrectionLevel: 'L',
     });
+
+    if(window.innerWidth < 600) {
+        qrCode.update({
+            width: 200, 
+            height: 200,
+        });
+    }
     
     qrCode.append(document.getElementById("qrcode"));
+
+
+    let widthBefore = window.innerWidth;
+    window.addEventListener("resize", debounce(() => {
+        if (window.innerWidth <= 600 && widthBefore > 600) {
+            qrCode.update({
+                width: 200, 
+                height: 200,
+            });
+            qrCode.append(document.getElementById("qrcode"));
+        } else if(window.innerWidth > 600 && widthBefore <= 600) {
+            qrCode.update({
+                width: 100, 
+                height: 100,
+            });
+            qrCode.append(document.getElementById("qrcode"));
+        }
+        widthBefore = window.innerWidth;
+    }
+    , 300) // 300 millisecond delay
+    )
 }
 
 function loadUpdates(sessionRef) {
@@ -188,7 +225,12 @@ if (sessionId) {
         
                     var container = $('#passages').html(`<h2>${sessionData.division} &mdash; ${sessionData.version}</h2><h4>${sessionData.words} words (${sessionData.wpm} words per minute)</h4>`);
                     container.append(passagesCtr)
-                    displayVerses($('#passages-ctr'), matchedVerses)
+                    displayVerses($('#passages-ctr'), matchedVerses);
+                    document.getElementById("share-code").innerHTML = sessionId;
+
+                    if (VIEW == 'contestant') {
+                        shuffleCtr.style.display = "";
+                    }
                     loadUpdates(sessionRef);
 
                 })
@@ -197,6 +239,7 @@ if (sessionId) {
             });
         } else {
             alert("Session not found!");
+            window.location = window.location.href.split("?")[0];
         }
     }).catch(error => {
         console.error("Error fetching session:", error);
@@ -346,8 +389,13 @@ function displayVerses(container, passages) {
                 
                 var container = $('#passages').html(`<h2>${division} &mdash; ${version}</h2><h4>${words} words (${Math.round(wpm)} words per minute)</h4>`);
                 passagesCtr.innerHTML = ''
-                container.append(passagesCtr)
-                displayVerses($('#passages-ctr'), passages)
+                container.append(passagesCtr);
+                displayVerses($('#passages-ctr'), passages);
+                document.getElementById("share-code").innerHTML = sessionId;
+
+                if (VIEW == 'contestant') {
+                    shuffleCtr.style.display = "";
+                }
 
                 // Generate a session ID and store the selected passages in Firestore
                 var newID = false

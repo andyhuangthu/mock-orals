@@ -42,7 +42,7 @@ permalink: /duos/
     <div class="nav-pill">
         <a href="/mock-orals/classic/">Classic</a>
         <a href="/mock-orals/">Solo</a>
-        <a href="/mock-orals/duos/">Duos</a>
+        <a href="/mock-orals/duos/" class="active">Duos</a>
     </div>
     <div class="view-pill">
         <select name="view" id="view">
@@ -135,11 +135,15 @@ permalink: /duos/
         <div id="passage-share-ctr" style="display:none;">
             <h1>TO INVITE:</h1>
             <div id="passage-share-qr-ctr">
+                <div id="share-link-ctr">
+                    Session Code:
+                    <div id="share-code">123456</div>
+                    <button id="copy-link-btn" class="theme-btn" onclick="copyShareLink()">
+                        <i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>
+                    </button>
+                </div>
+                <div id="passage-share-divider"></div>
                 <div id="qrcode"></div>
-                <h3>OR</h3>
-                <button id="copy-link-btn" class="theme-btn" onclick="copyShareLink()">
-                    <i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>
-                </button>
                 <script>
                     function copyShareLink() {
                         navigator.clipboard.writeText(window.location.href);
@@ -185,7 +189,7 @@ permalink: /duos/
         <div id="passages" style="font-size:16px">
             <div id="passages-ctr" class="flashcards-ctr judge-view"></div>
         </div>
-        <div id="shuffle-btn-div" style="display:none; text-align:center; margin-top: 20px;">
+        <div id="shuffle-btn-ctr" style="display:none; text-align:center; margin-top: 20px;">
             <button id="prevCard">←</button>
             <button id="nextCard">→</button>
         </div>
@@ -200,7 +204,7 @@ permalink: /duos/
         const divisionSelector = document.querySelector("#division")
         const viewSelector = document.querySelector(".view-pill select")
         const passagesCtr = document.querySelector("#passages-ctr")
-        const shuffleCtr = document.querySelector("#shuffle-btn-div")
+        const shuffleCtr = document.querySelector("#shuffle-btn-ctr")
 
 
         const soloTimerCtr = document.querySelector("#solo-timer-ctr")
@@ -264,7 +268,12 @@ permalink: /duos/
                             passagesCtr.classList.add("contestant-view");
                             passagesCtr.classList.remove("judge-view");
                             passagesCtr.style.transform = `translateX(0%)`;
-                            shuffleCtr.style.display = "";
+                            if (passagesCtr.innerHTML == "") {
+                                shuffleCtr.style.display = "none";
+                            }
+                            else {
+                                shuffleCtr.style.display = "";
+                            }
                         }
                     }
                 }
@@ -375,7 +384,12 @@ permalink: /duos/
                     passagesCtr.classList.add("contestant-view");
                     passagesCtr.classList.remove("judge-view");
                     passagesCtr.style.transform = `translateX(0%)`;
-                    shuffleCtr.style.display = "";
+                    if (passagesCtr.innerHTML == "") {
+                        shuffleCtr.style.display = "none";
+                    }
+                    else {
+                        shuffleCtr.style.display = "";
+                    }
                     currentCardIndex = 0;
                 }
             })
@@ -411,6 +425,7 @@ permalink: /duos/
         inviteBtn.addEventListener("click", () => {
             passageShareCtr.style.display = "flex";
             curtain.style.display = "";
+            document.querySelector('#copy-link-btn').innerHTML = `<i class="fa-regular fa-copy"></i><span>&nbsp;Copy Share Link</span>`
         })
 
         // passage settings

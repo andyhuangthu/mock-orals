@@ -183,6 +183,11 @@ div.container-fluid > div {
     color: var(--text-primary);
 }
 
+.nav-pill a.active {
+    background: var(--theme-bg);
+    color: var(--text-primary);
+}
+
 /* View bar */
 
 .view-pill {
@@ -553,13 +558,13 @@ button.theme-btn:hover, button.theme-btn:active {
     justify-content: center;
     flex-flow: column;
     gap: 30px;
+    min-width: 500px;
     background-color: var(--theme-primary);
     color: var(--text-primary);
-    padding: 15px;
+    padding: 40px;
     border-radius: 10px;
     font-family: 'Sigmar', Arial, Helvetica, sans-serif;
     box-shadow: 0px 0px 10px #000a;
-    overflow-y: auto;
     z-index: 20;
 }
 
@@ -567,7 +572,7 @@ button.theme-btn:hover, button.theme-btn:active {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 50px;
     font-family: 'Sigmar', Arial, Helvetica, sans-serif;
 }
 
@@ -575,7 +580,38 @@ button.theme-btn:hover, button.theme-btn:active {
     padding: 10px;
     background-color: #fff;
     border-radius: 5px;
+    min-width: 120px;
     aspect-ratio: 1 / 1;
+    overflow: hidden;
+}
+
+#passage-share-divider {
+    width: 3px;
+    height: 100px;
+    border-radius: 5px;
+    background-color: var(--theme-bg);
+}
+
+#share-link-ctr {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-flow: column;
+    min-width: 200px;
+}
+
+#share-link-ctr button {
+    width: 100%;
+}
+
+#share-code {
+    padding: 10px;
+    background-color: var(--bg-primary);
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 30px;
+    text-align: center;
     overflow: hidden;
 }
 
@@ -823,6 +859,7 @@ div.reference-bottom a {
         text-align: center;
         padding: 12px 20px;
     }
+
     .theme-btn, .control-btn, .st-timer-btn, .timer-btn {
         font-size: 20px;
         padding: 10px;
@@ -858,6 +895,25 @@ div.reference-bottom a {
     #passage-share-ctr {
         width: 100%;
         border-radius: 0px;
+    }
+
+    #qrcode {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 10px;
+        padding: 0px;
+    }
+
+    #qrcode canvas {
+        width: 180px;
+        height: 180px;
+    }
+
+    #passage-share-divider {
+        display: none;
     }
 
     #content-ctr {
