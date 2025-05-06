@@ -481,6 +481,8 @@ function displayVerses(container, passages) {
                         if (newID) {
                             generateQrCode(url.href);
                         }
+                        // update the session code with the new session ID
+                        document.getElementById("share-code").innerHTML = sessionId;
                     })
                     .catch(error => console.error("Error saving session: ", error));
 
