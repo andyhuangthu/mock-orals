@@ -252,13 +252,16 @@ permalink: /
         const closeGenerator = document.querySelector("#close-generator-btn")
         const generator = document.querySelector("#generator2")
         const curtain = document.querySelector("#curtain")
-        // close settings
-        [closeGenerator, curtain].forEach(ele => {
-            ele.addEventListener("click", () => {
-                generator.style.display = "none"
-                curtain.style.display = "none"
-            })
-        }) 
+        document.addEventListener("DOMContentLoaded", () => {
+            // close settings
+            [closeGenerator, curtain].forEach(ele => {
+                ele.addEventListener("click", () => {
+                    generator.style.display = "none"
+                    curtain.style.display = "none"
+                })
+            }) 
+        })
+        
         
         // open settings
         const controlGenerator = document.querySelector("#settings-btn")
