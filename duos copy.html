@@ -33,7 +33,7 @@
         <a href="/mock-orals/">Solo</a>
         <a href="/mock-orals/duos/" class="active">Duos</a>
     </div>
-    <div class="view-pill">
+    <div id="view-pill" style="display: none;">
         <select name="view" id="view">
             <option value="judge" selected>Judge View</option>
             <option value="contestant">Contestant View</option>
@@ -42,8 +42,25 @@
             <i class="fa-solid fa-gear"></i><span>&nbsp;Settings</span>
         </button>
     </div>
+    <div id="landing-ctr">
+        <div id="id-form-ctr">
+            <h1 class="text-center">BBMO Duos</h1>
+            <div id="id-errors" style="display: none;"></div>
+            <div id="id-form">
+                <input id="id" type="text" placeholder="Enter your ID..." required="required"/>
+                <button id="id-btn" class="theme-btn full-form-btn">Go</button>
+            </div>
+            <div><a id="id-link" href="javascript:void(0)">Start your own session</a></div>
+        </div>
+        <div class="wave-container">
+            <svg viewBox="0 0 500 150" preserveAspectRatio="none">
+              <path d="M0,60 C150,100 350,0 500,60 L500,150 L0,150 Z" 
+                    style="stroke: none"></path>
+            </svg>
+          </div>
+    </div>
     <!-- TODO: Create different pages: contestant view, judge view, settings page, and landing page -->    
-    <div id="curtain"></div>
+    <div id="curtain" style="display:none"></div>
     <div id="optionbar" style="display: none;">
         <div id="center-options-ctr">
             <button id="play-btn" class="timer-btn">
@@ -58,7 +75,7 @@
         </div>
     </div>
     <div id="content-ctr" class="container-fluid">
-    <div id="content">
+    <div id="content" style="display:none;">
         <div id="generator2" class="form-horizontal">
             <div>
                 <h2 class="text-center">Passage Settings</h2>
@@ -144,21 +161,6 @@
             <div id="close-share-ctr-btn" class="close-btn">&times;</div>
         </div>
 
-        <div id="solo-timer-ctr" display="none">
-            <div id="solo-timer">
-                <svg id="st-svg" viewBox="0 0 100 100">
-                    <g id="st-circle">
-                        <circle id="st-bg" cx="50%" cy="50%" r="45"></circle>
-                        <circle id="st-time" cx="50%" cy="50%" r="45"></circle>
-                    </g>
-                </svg>
-                <input id="st-minutes" maxlength="2" value="08" placeholder="00" type="number" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false">:<input id="st-seconds" maxlength="2" value="00" placeholder="00" type="number" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false">
-            </div>
-            <div id="st-btn-ctr">
-                <button id="st-play-btn" class="st-timer-btn">Start</button>
-                <button id="st-reset-btn" class="st-timer-btn" disabled>Reset</button>
-            </div>
-        </div>
 
         <div id="passage-settings-ctr">
             <button id="generate-btn" class="control-btn theme-btn" title="Generate Passages">
@@ -173,6 +175,22 @@
             <button id="invite-btn" class="control-btn theme-btn" title="Invite Friends" disabled>
                 <i class="fa-solid fa-user-plus"></i><span>&nbsp;Invite</span>
             </button>
+        </div>
+
+        <div id="solo-timer-ctr" display="none">
+            <div id="solo-timer">
+                <svg id="st-svg" viewBox="0 0 100 100">
+                    <g id="st-circle">
+                        <circle id="st-bg" cx="50%" cy="50%" r="45"></circle>
+                        <circle id="st-time" cx="50%" cy="50%" r="45"></circle>
+                    </g>
+                </svg>
+                <input id="st-minutes" maxlength="2" value="08" placeholder="00" type="number" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false">:<input id="st-seconds" maxlength="2" value="00" placeholder="00" type="number" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false">
+            </div>
+            <div id="st-btn-ctr">
+                <button id="st-play-btn" class="st-timer-btn">Start</button>
+                <button id="st-reset-btn" class="st-timer-btn" disabled>Reset</button>
+            </div>
         </div>
 
         <div id="passages" style="font-size:16px">
@@ -191,7 +209,8 @@
         const themeSelector = document.querySelector("#theme")
         const versionSelector = document.querySelector("#version")
         const divisionSelector = document.querySelector("#division")
-        const viewSelector = document.querySelector(".view-pill select")
+        const viewCtr = document.querySelector("#view-pill")
+        const viewSelector = document.querySelector("#view-pill select")
         const passagesCtr = document.querySelector("#passages-ctr")
         const shuffleCtr = document.querySelector("#shuffle-btn-ctr")
 
@@ -289,26 +308,60 @@
             }
         }
 
+        // Go to session
+        const idBtn = document.querySelector("#id-btn")
+        const idInput = document.querySelector("#id")
+        const idErrors = document.querySelector("#id-errors")
+        const idLink = document.querySelector("#id-link")
+
+        // go to session - see script.js
+
+        idInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                idBtn.click(); // Trigger the same functionality as clicking the button
+            }
+        });
+
+        // start new session
+        idLink.addEventListener("click", () => {
+            idInput.value = ""
+            idErrors.innerHTML = ""
+            document.querySelector("#landing-ctr").style.display = "none"
+            document.querySelector("#content").style.display = ""
+            document.querySelector("#content-ctr").style.display = ""
+            document.querySelector("#generator2").style.display = ""
+            document.querySelector("#curtain").style.display = ""
+            viewCtr.style.display = ""
+        })
+
         // sense scroll
         const optionbar = document.querySelector("#optionbar")
         var optionbarAnimating = false
+        var timerY = timerY = Math.round((soloTimerCtr.getBoundingClientRect().top + window.scrollY) / 100) * 100 + 300
+        window.addEventListener("resize", () => {
+            timerY = Math.round((soloTimerCtr.getBoundingClientRect().top + window.scrollY) / 100) * 100 + 300
+            console.log(timerY)
+        })
         window.addEventListener("scroll", () => {
             if (!optionbarAnimating)
             {
                 // console.log(window.scrollY, timer_open)
-                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName) && timerOpen) {
+                if (window.scrollY > timerY && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName) && timerOpen) {
+                    if (optionbar.style.display == "none") {
+                        optionbar.style.display = ""
+                    }
                     optionbar.style.animationName = "optionbar-appear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
-                else if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear" && timerOpen) {
+                else if(window.scrollY <= timerY && optionbar.style.animationName == "optionbar-appear" && timerOpen) {
                     optionbar.style.animationName = "optionbar-disappear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
                 }
 
             }
-            else if (window.scrollY <= 100 && timerOpen) {
+            else if (window.scrollY <= timerY && timerOpen) {
                 optionbar.style.animationName = "optionbar-disappear"
                 optionbar.style.animationPlayState = "running"
                 optionbarAnimating = true
@@ -636,7 +689,7 @@
                 timerOpen = false
                 optionbar.style.display = "none"
                 soloTimerCtr.style.display = "none"
-                if (window.scrollY > 100 && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName)) {
+                if (window.scrollY > timerY && (optionbar.style.animationName == "optionbar-disappear" || !optionbar.style.animationName)) {
                     optionbar.style.animationName = "optionbar-appear"
                     optionbar.style.animationPlayState = "running"
                     optionbarAnimating = true
@@ -646,12 +699,9 @@
             else {
                 controlTimer.querySelector("span").innerHTML = "&nbsp;Close Timer"
                 timerOpen = true
-                optionbar.style.display = ""
                 soloTimerCtr.style.display = ""
-                if(window.scrollY <= 100 && optionbar.style.animationName == "optionbar-appear") {
-                    optionbar.style.animationName = "optionbar-disappear"
-                    optionbar.style.animationPlayState = "running"
-                    optionbarAnimating = true
+                if(window.scrollY > timerY) {
+                    optionbar.style.display = ""
                 }
                 localStorage.setItem("close-timer", false)
             }

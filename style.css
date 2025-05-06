@@ -24,6 +24,9 @@
     --theme-hover: #85b2ff;
     --theme-disabled: #e3ebf8;
     --theme-fade: #d6e4f8;
+    --error-border: #f44336aa;
+    --error-bg: #f4433611;
+    --error-text: #f44336;
 }
 
 [data-theme="dark"] {
@@ -163,6 +166,7 @@ div.container-fluid > div {
     border-radius: 25px;
     display: flex;
     overflow: hidden;
+    z-index: 10;
 }
 
 .nav-pill a {
@@ -190,7 +194,7 @@ div.container-fluid > div {
 
 /* View bar */
 
-.view-pill {
+#view-pill {
     position: fixed;
     bottom: 0;
     left: 50%;
@@ -209,7 +213,7 @@ div.container-fluid > div {
     background-color: var(--bg-contrast-tl);
 }
 
-.view-pill select {
+#view-pill select {
     display: block;
     width: 70%;
     padding: 10px;
@@ -220,11 +224,11 @@ div.container-fluid > div {
     transition: .2s ease;
 }
 
-.view-pill select:hover {
+#view-pill select:hover {
     background-color: var(--bg-shade);
 }
 
-.view-pill #settings-btn-2 {
+#view-pill #settings-btn-2 {
     display: block;
 }
 
@@ -356,6 +360,88 @@ div.container-fluid > div {
 
 .timer-btn:not(:disabled):hover {
     background-color: var(--theme-hover);
+}
+
+#landing-ctr {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    width: 100%;
+    height: 100%;
+    padding: 20px 0;
+    background-color: var(--bg-mid);
+    z-index: 9;
+}
+
+#id-form-ctr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    gap: 20px;
+    width: clamp(300px, 95vw, 400px);
+    padding: 20px;
+    background-color: var(--bg-primary);
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px #222a;
+    z-index: 20;
+}
+
+#id-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    gap: 10px;
+    width: 100%;
+}
+
+#id-form input, #id-form button {
+    text-align: center;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+#id-errors {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--error-bg);
+    border: 2px solid var(--error-border);
+    border-radius: 5px;
+    color: var(--error-text);
+    font-size: 15px;
+}
+
+.wave-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.wave-container svg {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 500px;
+}
+
+.wave-container path {
+    fill: var(--bg-shade);
+}
+
+.full-form-btn {
+    width: 100%;
 }
 
 #content-ctr {
@@ -948,7 +1034,7 @@ div.reference-bottom a {
 }
 
 @media print {
-    .nav-pill, .view-pill {
+    .nav-pill, #view-pill {
         display: none;
     }
     

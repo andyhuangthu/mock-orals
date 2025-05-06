@@ -190,11 +190,69 @@ function loadUpdates(sessionRef) {
 }
 
 
+const idInput = document.querySelector("#id")
+const idErrors = document.querySelector("#id-errors")
+document.querySelector("#id-btn").addEventListener("click", () => {
+    const id = idInput.value
+    if (id == "") {
+        idErrors.style.display = ""
+        idErrors.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>&nbsp;Please enter a valid ID`
+        idInput.focus()
+        idInput.select()
+        return
+    }
+    // check if id is valid
+    const regex = /^[a-zA-Z0-9]{6}$/
+    if (!regex.test(id)) {
+        idErrors.style.display = ""
+        idErrors.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>&nbsp;Please enter a valid ID`
+        idInput.focus()
+        idInput.select()
+        return
+    }
+    const sessionIdToCheck = idInput.value;
+    
+    getDoc(doc(db, "sessions", sessionIdToCheck))
+        .then((docSnapshot) => {
+            console.log(docSnapshot.exists());
+            if (docSnapshot.exists()) {
+                window.location = `${window.location.href.split("?")[0]}?session=${sessionIdToCheck}`;
+            } else {
+                idErrors.style.display = ""
+                idErrors.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>&nbsp;Session ID not found`
+                idInput.focus()
+                idInput.select()
+                return
+            }
+        }
+        )
+        .catch((error) => {
+            console.error("Error checking session existence:", error);
+            idErrors.style.display = ""
+            idErrors.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>&nbsp;Session ID not found`
+            idInput.focus()
+            idInput.select()
+            return
+        }
+        );
+})
+
+// Generate verses from the JSON file
 if (sessionId) {
     let versesData = []; // This will hold the data from the JSON file
 
     // generate qr code
     generateQrCode(window.location.href)
+
+
+    document.querySelector("#id").value = ""
+    document.querySelector("#id-errors").innerHTML = ""
+    document.querySelector("#landing-ctr").style.display = "none"
+    document.querySelector("#content").style.display = ""
+    document.querySelector("#content-ctr").style.display = ""
+    document.querySelector("#generator2").style.display = ""
+    document.querySelector("#curtain").style.display = ""
+    document.querySelector("#view-pill").style.display = ""
 
     // Load the JSON file with verses (using fetch or a local JSON file)
     
@@ -391,6 +449,7 @@ function displayVerses(container, passages) {
                 passagesCtr.innerHTML = ''
                 container.append(passagesCtr);
                 displayVerses($('#passages-ctr'), passages);
+                document.getElementById("share-code").innerHTML = sessionId;
 
                 if (VIEW == 'contestant') {
                     shuffleCtr.style.display = "";
@@ -400,11 +459,9 @@ function displayVerses(container, passages) {
                 var newID = false
                 if (!sessionId)
                 {
-                    sessionId = Math.random().toString(36).substring(2, 10); // Generate a simple random session ID
+                    sessionId = Math.random().toString(36).substring(2, 8); // Generate a simple random session ID
                     newID = true
                 }
-                document.getElementById("share-code").innerHTML = sessionId;
-                
                 let selectedVerses = passages.map(passage => passage.reference);
                 let sessionRef = doc(db, "sessions", sessionId);
 
