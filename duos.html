@@ -18,14 +18,122 @@ permalink: /duos/
 
     <title>Mock Orals</title>
 
+    <script>
+
+        var VIEW;
+        const passages = document.querySelector("#passages")
+        // load local storage
+        const themeSelector = document.querySelector("#theme")
+        const versionSelector = document.querySelector("#version")
+        const divisionSelector = document.querySelector("#division")
+        const viewCtr = document.querySelector("#view-pill")
+        const viewSelector = document.querySelector("#view-pill select")
+        const passagesCtr = document.querySelector("#passages-ctr")
+        const shuffleCtr = document.querySelector("#shuffle-btn-ctr")
+
+
+        const soloTimerCtr = document.querySelector("#solo-timer-ctr")
+        var timerOpen = false
+        
+        
+        window.onload = () => {
+            var version = localStorage.getItem("version")
+            if (version) {
+                for (let i = 0; i < versionSelector.options.length; i++) {
+                    if (versionSelector.options[i].value == version) {
+                        versionSelector.options[i].selected = true
+                    }
+                }
+            }
+            var division = localStorage.getItem("division")
+            if (division) {
+                for (let i = 0; i < divisionSelector.options.length; i++) {
+                    if (divisionSelector.options[i].value == division) {
+                        divisionSelector.options[i].selected = true
+                    }
+                }
+            }
+            var theme = localStorage.getItem("theme")
+            if (theme) {
+                for (let i = 0; i < themeSelector.options.length; i++) {
+                    if (themeSelector.options[i].value == theme) {
+                        themeSelector.options[i].selected = true
+                        document.querySelector("html").setAttribute("data-theme", theme)
+                    }
+                }
+            }
+            var fontSize = localStorage.getItem("font-size")
+            if (fontSize) {
+                document.querySelectorAll(".text-size").forEach(radio => {
+                    if (radio.value == fontSize) {
+                        radio.checked = true
+                        passages.style.fontSize = radio.value
+                    }
+                    else {
+                        radio.checked = false
+                    }
+                })
+            }
+            var view = localStorage.getItem("view")
+            if (view) {
+                for (let i = 0; i < viewSelector.options.length; i++) {
+                    if (viewSelector.options[i].value == view) {
+                        viewSelector.options[i].selected = true
+                        VIEW = viewSelector.value
+                        if (viewSelector.value == "judge") {
+                            passages.classList.remove("hide-text-ctr");
+                            passagesCtr.classList.remove("contestant-view");
+                            passagesCtr.classList.add("judge-view");  
+                            passagesCtr.style.flexFlow = "";
+                            passagesCtr.style.transform = "";
+                            shuffleCtr.style.display = "none";
+                        }
+                        else {
+                            passages.classList.add("hide-text-ctr");
+                            passagesCtr.classList.add("contestant-view");
+                            passagesCtr.classList.remove("judge-view");
+                            passagesCtr.style.transform = `translateX(0%)`;
+                            if (passagesCtr.innerHTML == "") {
+                                shuffleCtr.style.display = "none";
+                            }
+                            else {
+                                shuffleCtr.style.display = "";
+                            }
+                        }
+                    }
+                }
+            }
+            var closeTimer = localStorage.getItem("close-timer")
+            if (closeTimer) {
+                if (closeTimer == "true") {
+                    optionbar.style.display = "none"
+                    soloTimerCtr.style.display = "none"
+                    controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
+                }
+                else {
+                    optionbar.style.display = ""
+                    soloTimerCtr.style.display = ""
+                    controlTimer.querySelector("span").innerHTML = "&nbsp;Close Timer"
+                }
+                timerOpen = closeTimer == "true" ? false : true
+            }
+            else {
+                optionbar.style.display = "none"
+                soloTimerCtr.style.display = "none"
+                controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
+                timerOpen = false
+            }
+        }
+    </script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
           integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <link rel="stylesheet" href="/mock-orals/style.css">
 
 
-    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/mock-orals/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/mock-orals/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/mock-orals/img/favicon-16x16.png">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!-- Firebase SDK -->
@@ -214,110 +322,6 @@ permalink: /duos/
     </div>
     </div>
     <script>
-        var VIEW;
-        const passages = document.querySelector("#passages")
-        // load local storage
-        const themeSelector = document.querySelector("#theme")
-        const versionSelector = document.querySelector("#version")
-        const divisionSelector = document.querySelector("#division")
-        const viewCtr = document.querySelector("#view-pill")
-        const viewSelector = document.querySelector("#view-pill select")
-        const passagesCtr = document.querySelector("#passages-ctr")
-        const shuffleCtr = document.querySelector("#shuffle-btn-ctr")
-
-
-        const soloTimerCtr = document.querySelector("#solo-timer-ctr")
-        var timerOpen = false
-        
-        
-        window.onload = () => {
-            var version = localStorage.getItem("version")
-            if (version) {
-                for (let i = 0; i < versionSelector.options.length; i++) {
-                    if (versionSelector.options[i].value == version) {
-                        versionSelector.options[i].selected = true
-                    }
-                }
-            }
-            var division = localStorage.getItem("division")
-            if (division) {
-                for (let i = 0; i < divisionSelector.options.length; i++) {
-                    if (divisionSelector.options[i].value == division) {
-                        divisionSelector.options[i].selected = true
-                    }
-                }
-            }
-            var theme = localStorage.getItem("theme")
-            if (theme) {
-                for (let i = 0; i < themeSelector.options.length; i++) {
-                    if (themeSelector.options[i].value == theme) {
-                        themeSelector.options[i].selected = true
-                        document.querySelector("html").setAttribute("data-theme", theme)
-                    }
-                }
-            }
-            var fontSize = localStorage.getItem("font-size")
-            if (fontSize) {
-                document.querySelectorAll(".text-size").forEach(radio => {
-                    if (radio.value == fontSize) {
-                        radio.checked = true
-                        passages.style.fontSize = radio.value
-                    }
-                    else {
-                        radio.checked = false
-                    }
-                })
-            }
-            var view = localStorage.getItem("view")
-            if (view) {
-                for (let i = 0; i < viewSelector.options.length; i++) {
-                    if (viewSelector.options[i].value == view) {
-                        viewSelector.options[i].selected = true
-                        VIEW = viewSelector.value
-                        if (viewSelector.value == "judge") {
-                            passages.classList.remove("hide-text-ctr");
-                            passagesCtr.classList.remove("contestant-view");
-                            passagesCtr.classList.add("judge-view");  
-                            passagesCtr.style.flexFlow = "";
-                            passagesCtr.style.transform = "";
-                            shuffleCtr.style.display = "none";
-                        }
-                        else {
-                            passages.classList.add("hide-text-ctr");
-                            passagesCtr.classList.add("contestant-view");
-                            passagesCtr.classList.remove("judge-view");
-                            passagesCtr.style.transform = `translateX(0%)`;
-                            if (passagesCtr.innerHTML == "") {
-                                shuffleCtr.style.display = "none";
-                            }
-                            else {
-                                shuffleCtr.style.display = "";
-                            }
-                        }
-                    }
-                }
-            }
-            var closeTimer = localStorage.getItem("close-timer")
-            if (closeTimer) {
-                if (closeTimer == "true") {
-                    optionbar.style.display = "none"
-                    soloTimerCtr.style.display = "none"
-                    controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
-                }
-                else {
-                    optionbar.style.display = ""
-                    soloTimerCtr.style.display = ""
-                    controlTimer.querySelector("span").innerHTML = "&nbsp;Close Timer"
-                }
-                timerOpen = closeTimer == "true" ? false : true
-            }
-            else {
-                optionbar.style.display = "none"
-                soloTimerCtr.style.display = "none"
-                controlTimer.querySelector("span").innerHTML = "&nbsp;Open Timer"
-                timerOpen = false
-            }
-        }
 
         // Go to session
         const idBtn = document.querySelector("#id-btn")
