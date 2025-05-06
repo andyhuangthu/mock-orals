@@ -112,7 +112,7 @@ function generateQrCode(url) {
         height: 100,
         data: url,
         dotsOptions: { color: "#5a90bd", type: "extra-rounded" },
-        backgroundOptions: { color: "#fff" },
+        backgroundOptions: { color: getComputedStyle(root).getPropertyValue('--bg-primary').trim() },
         errorCorrectionLevel: 'L',
     });
 
