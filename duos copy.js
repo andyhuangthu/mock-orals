@@ -145,6 +145,15 @@ function generateQrCode(url) {
     }
     , 300) // 300 millisecond delay
     )
+
+    themeSelector.addEventListener("change", debounce(() => {
+        qrCode.update({
+            backgroundOptions: { color: getComputedStyle(root).getPropertyValue('--bg-primary').trim() },
+        });
+        qrCode.append(document.getElementById("qrcode"));
+    }
+    , 300) // 300 millisecond delay
+    )
 }
 
 function loadUpdates(sessionRef) {
