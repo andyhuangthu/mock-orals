@@ -22,6 +22,7 @@ var sessionId = urlParams.get("session");
 
 const passagesCtr = document.querySelector('#passages-ctr');
 const shuffleCtr = document.querySelector('#shuffle-btn-ctr');
+const root = document.documentElement;
 
 // Function to select errors on the selected passage
 const selectWord = (e) => {
