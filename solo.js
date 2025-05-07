@@ -1,4 +1,4 @@
-const JSON_ROOT = "/mock-orals/2024"
+const JSON_ROOT = "/mock-orals/2025"
 
 const passagesCtr = document.querySelector('#passages-ctr');
 

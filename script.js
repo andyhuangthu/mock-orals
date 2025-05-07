@@ -95,7 +95,7 @@
 
         $.ajax({
             dataType: 'json',
-            url: `/mock-orals/2024/${division.toLowerCase()}-${version.toLowerCase()}.json`,
+            url: `/mock-orals/2025/${division.toLowerCase()}-${version.toLowerCase()}.json`,
         }).done(function (passages) {
             console.log(`received ${passages.length} passages`);
             let max_words = Number(valueOf($('#max_words')));

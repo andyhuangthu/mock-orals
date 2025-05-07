@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const urlParams = new URLSearchParams(window.location.search);
-const JSON_ROOT = "2024"
+const JSON_ROOT = "2025"
 var sessionId = urlParams.get("session");
 
 const passagesCtr = document.querySelector('#passages-ctr');
