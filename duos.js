@@ -371,7 +371,7 @@ function displayVerses(container, passages) {
     document.addEventListener('DOMContentLoaded', () => {
         var division = localStorage.getItem('division') || 'Senior', min_wpm, max_wpm, max_words;
 
-        switch (division.val()) {
+        switch (division) {
             case 'Senior':
                 min_wpm = 130;
                 max_wpm = 150;
@@ -383,7 +383,7 @@ function displayVerses(container, passages) {
                 max_words = 200;
                 break;
             case 'Primary':
-                min_wpm = 100;
+                min_wpm = 90;
                 max_wpm = 115;
                 max_words = 150;
                 break;
@@ -392,6 +392,7 @@ function displayVerses(container, passages) {
                 formValid(false);
                 return;
         }
+        console.log(division)
         setDefault($('#min_wpm'), min_wpm);
         setDefault($('#max_wpm'), max_wpm);
         setDefault($('#max_words'), max_words);
@@ -412,7 +413,7 @@ function displayVerses(container, passages) {
                     max_words = 200;
                     break;
                 case 'Primary':
-                    min_wpm = 100;
+                    min_wpm = 90;
                     max_wpm = 115;
                     max_words = 150;
                     break;
