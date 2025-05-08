@@ -353,6 +353,7 @@ function displayVerses(container, passages) {
     
     const formValid = (valid = !document.querySelectorAll('.has-error').length) => {
         document.getElementById('generate').disabled = !valid;
+        document.getElementById('generate-btn').disabled = !valid;
     };
     
     const speechRateChanged = () => {
@@ -368,6 +369,35 @@ function displayVerses(container, passages) {
     };
     
     document.addEventListener('DOMContentLoaded', () => {
+        var division = localStorage.getItem('division') || 'Senior', min_wpm, max_wpm, max_words;
+
+        switch (division.val()) {
+            case 'Senior':
+                min_wpm = 130;
+                max_wpm = 150;
+                max_words = 220;
+                break;
+            case 'Junior':
+                min_wpm = 115;
+                max_wpm = 130;
+                max_words = 200;
+                break;
+            case 'Primary':
+                min_wpm = 100;
+                max_wpm = 115;
+                max_words = 150;
+                break;
+            default:
+                division.addClass('has-error');
+                formValid(false);
+                return;
+        }
+        setDefault($('#min_wpm'), min_wpm);
+        setDefault($('#max_wpm'), max_wpm);
+        setDefault($('#max_words'), max_words);
+        formValid();
+
+
         $('#division').change(function () {
             let division = $(this), min_wpm, max_wpm, max_words;
             switch (division.val()) {
