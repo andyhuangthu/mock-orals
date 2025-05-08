@@ -39,7 +39,7 @@ def extract_passages_from_pdf(pdf_data: bytes, version: str, division: str):
         print(f"\n--- PAGE {page_num + 1} ---")
         for line in lines:
             line = line.strip()
-            # print(f"> {line}")  # Debug: print every line seen
+            print(f"> {line}")  # Debug: print every line seen
 
             # Skip boilerplate
             if line.startswith(("Created", "Explore Memory Passage", "Navigate Memory Passage", "National Bible Bee", "•")):
@@ -71,7 +71,7 @@ def extract_passages_from_pdf(pdf_data: bytes, version: str, division: str):
                 continue
 
             # Check for verse reference line
-            match_ref = re.match(r'^([A-Za-z ]+\d+:\d+(?:–|-)\d+)(?: \((\d+)/(\d+)\))?', line)
+            match_ref = re.match(r'^([A-Za-z ]+\d+ ?:\d+(?:[–-]\d+)?)(?: \((\d+)/(\d+)\))?', line)
             if match_ref:
                 current_ref = {
                     "reference": match_ref.group(1),
