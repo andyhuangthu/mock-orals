@@ -7,9 +7,7 @@ permalink: /duos/
     The page is divided into two sections: the judge view and the contestant view.
     The judge view displays the passages for the contestants to recite.
     The contestant view displays the timer and the passages for the contestants to recite. 
-    TODO: Add two settings tabs, passage settings + thematic settings; add "enter session id" page
-    If session is already opened, don't make passage settings open automatically
-    Change styles for sharing container
+    TODO: Implement user login and registration with Firebase
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -43,9 +41,13 @@ permalink: /duos/
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
     <script src="/mock-orals/duos.js" type="module"></script>
     <script src="https://kit.fontawesome.com/06b44fd96d.js" crossorigin="anonymous"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sigmar&display=swap" rel="stylesheet">
+    <!-- Plyr -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.2/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.2/plyr.js"></script>
 </head>
 
 <body>
@@ -55,13 +57,26 @@ permalink: /duos/
         <a href="/mock-orals/duos/" class="active">Duos</a>
     </div>
     <div id="view-pill" style="display: none;">
-        <select name="view" id="view">
-            <option value="judge" selected>Judge View</option>
-            <option value="contestant">Contestant View</option>
-        </select>
-        <button id="settings-btn-2" class="theme-btn" title="Open Settings">
-            <i class="fa-solid fa-gear"></i><span>&nbsp;Settings</span>
-        </button>
+        <div id="view-wrapper">
+            <div id="view-toggle" class="expanded">
+                <select name="view" id="view-selector" title="Select view">
+                    <option value="judge" selected><i class="fa-solid fa-headphones"></i>&nbsp;Judge View</option>
+                    <option value="contestant"><i class="fa-solid fa-message"></i>&nbsp;Contestant View</option>
+                </select>
+            </div>
+            <div id="record-bar" class="collapsed">
+                <div id="record-content-ctr" class="collapsed">
+                    <canvas id="waveform" width="600" height="100"></canvas>
+                    <div id="audio-ctr">
+                        <audio id="audioPlayback" controls></audio>
+                    </div>
+                </div>
+                <button id="record-btn" class="theme-btn collapsed" title="Record voice">
+                    <i class="fa-solid fa-record-vinyl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- TODO: Be able to toggle between recording and changing judge/contestant -->
     </div>
     <div id="landing-ctr">
         <div id="id-form-ctr">
@@ -79,8 +94,7 @@ permalink: /duos/
                     style="stroke: none"></path>
             </svg>
           </div>
-    </div>
-    <!-- TODO: Create different pages: contestant view, judge view, settings page, and landing page -->    
+    </div>   
     <div id="curtain" style="display:none"></div>
     <div id="optionbar" style="display: none;">
         <div id="center-options-ctr">
@@ -223,6 +237,158 @@ permalink: /duos/
         </div>
     </div>
     </div>
+    <script>
+        // Toggle between recording and changing judge/contestant
+
+        const viewToggle = document.getElementById("view-toggle");
+        const recordBar = document.getElementById("record-bar");
+        const recordContent = document.getElementById("record-content-ctr");
+        const recordBtn = document.getElementById("record-btn");
+
+        let expanded = false;
+
+        viewToggle.addEventListener("click", () => {
+            if (isRecording) recordBtn.click();
+            if (!expanded) return;
+            viewToggle.classList.remove("collapsed");
+            viewToggle.classList.add("expanded");
+            recordBar.classList.remove("expanded");
+            recordBar.classList.add("collapsed");
+            recordContent.classList.remove("expanded");
+            recordContent.classList.add("collapsed");
+            recordBtn.classList.add("collapsed");
+            recordBtn.classList.remove("expanded");
+            recordBtn.innerHTML = `<i class="fa-solid fa-record-vinyl"></i>`;
+            expanded = false;
+        });
+
+        // Record audio
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        const audioCtr = document.getElementById("audio-ctr");
+        const waveformCanvas = document.getElementById("waveform");
+        const audioPlayback = document.getElementById("audioPlayback");
+        const player = new Plyr(audioPlayback, {
+            controls: ['play', 'progress', 'current-time']
+        });
+
+        recordBtn.onclick = async () => {
+            // Start recording
+            if (!isRecording && (expanded || player.source == "")) {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                cleanupWaveform = setupWaveformVisualizer(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioURL = URL.createObjectURL(blob);
+                    player.source = {
+                        type: 'audio',
+                        sources: [{ src: audioURL, type: 'audio/webm' }]
+                    };
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                recordBtn.innerHTML = `<i class="fa-solid fa-stop"></i>`;
+                waveformCanvas.style.display = "";
+                audioCtr.style.display = "none";
+            } 
+            // Stop recording
+            else if (expanded) {
+                mediaRecorder.stop();
+                isRecording = false;
+                recordBtn.innerHTML = `<i class="fa-solid fa-microphone"></i>`;
+                if (cleanupWaveform) cleanupWaveform();
+                waveformCanvas.style.display = "none";
+                audioCtr.style.display = "block";
+
+            }
+
+            // Check if the user is already recording
+            if (!expanded) {
+                viewToggle.classList.remove("expanded");
+                viewToggle.classList.add("collapsed");
+                recordBar.classList.remove("collapsed");
+                recordBar.classList.add("expanded");
+                recordContent.classList.remove("collapsed");
+                recordContent.classList.add("expanded");
+                expanded = true;
+                recordBtn.classList.add("expanded");
+                recordBtn.classList.remove("collapsed");
+                recordBtn.innerHTML = `<i class="fa-solid fa-microphone"></i>`;
+            }
+        };
+
+        // Set up the canvas for waveform visualization
+        const canvasCtx = waveformCanvas.getContext("2d");
+
+        function setupWaveformVisualizer(stream) {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioCtx.createMediaStreamSource(stream);
+        const analyser = audioCtx.createAnalyser();
+
+        analyser.fftSize = 2048;
+        const bufferLength = analyser.fftSize;
+        const dataArray = new Uint8Array(bufferLength);
+
+        source.connect(analyser);
+
+        function getCSSVar(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        function draw() {
+            requestAnimationFrame(draw);
+
+            analyser.getByteTimeDomainData(dataArray);
+
+            canvasCtx.fillStyle = getCSSVar('--theme-fade');
+            canvasCtx.fillRect(0, 0, waveformCanvas.width, waveformCanvas.height);
+
+            canvasCtx.lineWidth = 4;
+            canvasCtx.strokeStyle = getCSSVar('--theme-primary'); // waveform color
+
+            canvasCtx.beginPath();
+
+            const sliceWidth = waveformCanvas.width * 1.0 / bufferLength;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+            const v = dataArray[i] / 128.0; // normalize to [0, 2]
+            const y = (v * waveformCanvas.height) / 2;
+
+            if (i === 0) {
+                canvasCtx.moveTo(x, y);
+            } else {
+                canvasCtx.lineTo(x, y);
+            }
+
+            x += sliceWidth;
+            }
+
+            canvasCtx.lineTo(waveformCanvas.width, waveformCanvas.height / 2);
+            canvasCtx.stroke();
+        }
+
+        draw();
+
+        // Return a cleanup function
+        return () => {
+            audioCtx.close();
+        };
+        }
+
+    </script>
+
     <script>
         var VIEW;
         const passages = document.querySelector("#passages")
