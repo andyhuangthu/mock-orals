@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login / Signup</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Sigmar&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="auth-content">
+        <div class="auth-container">
+            <div id="signup-form">
+                <h2>Sign Up</h2>
+
+                <div class="input-ctr">
+                    <input id="signup-email" type="email" placeholder="Email">
+                    <input id="signup-password" type="password" placeholder="Password">
+                </div>
+
+                <button onclick="signUp()">Sign Up</button>
+                <div class="link-ctr">
+                    <span>Already have an account? <a id="login-link" href="javascript:void(0)">Log in</a></span>
+                </div>
+            </div>
+            <div id="login-form">
+                <h2>Log In to Mock Orals</h2>
+
+                <button class="google-btn" onclick="signInWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+                    Continue with Google
+                </button>
+
+                <div class="or-ctr"><span>OR</span></div>
+
+                <div class="input-ctr">
+                    <input id="login-email" type="email" placeholder="Email">
+                    <input id="login-password" type="password" placeholder="Password">
+                </div>
+
+                <button onclick="logIn()">Log In</button>
+
+                <div class="link-ctr">
+                    <a id="pwd-reset-link" href="javascript:void(0)">Forgot your password?</a>
+                    <a id="signup-link" href="javascript:void(0)">Sign up</a>
+                </div>
+            </div>
+            
+            <div id="logout-form">
+                <button onclick="logOut()">Log Out</button>
+            </div>
+
+            <!--<div id="user-info">Not logged in.</div>-->
+        </div>
+
+    </div>
+
+    <!-- Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+
+    <!-- Your app files -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
