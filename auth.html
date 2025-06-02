@@ -15,20 +15,27 @@
     <div id="auth-content">
         <div class="auth-container">
             <div id="signup-form">
-                <h2>Sign Up</h2>
+                <h1>Sign Up</h1>
+
+                <button class="google-btn" onclick="signInWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+                    Continue with Google
+                </button>
+
+                <div class="or-ctr"><span>OR</span></div>
 
                 <div class="input-ctr">
                     <input id="signup-email" type="email" placeholder="Email">
                     <input id="signup-password" type="password" placeholder="Password">
                 </div>
 
-                <button onclick="signUp()">Sign Up</button>
+                <button class="submit-btn" onclick="signUp()">Sign Up</button>
                 <div class="link-ctr">
                     <span>Already have an account? <a id="login-link" href="javascript:void(0)">Log in</a></span>
                 </div>
             </div>
             <div id="login-form">
-                <h2>Log In to Mock Orals</h2>
+                <h1>Log In</h1>
 
                 <button class="google-btn" onclick="signInWithGoogle()">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
@@ -42,7 +49,7 @@
                     <input id="login-password" type="password" placeholder="Password">
                 </div>
 
-                <button onclick="logIn()">Log In</button>
+                <button class="submit-btn" onclick="logIn()">Log In</button>
 
                 <div class="link-ctr">
                     <a id="pwd-reset-link" href="javascript:void(0)">Forgot your password?</a>
@@ -51,7 +58,7 @@
             </div>
             
             <div id="logout-form">
-                <button onclick="logOut()">Log Out</button>
+                <button class="submit-btn" onclick="logOut()">Log Out</button>
             </div>
 
             <!--<div id="user-info">Not logged in.</div>-->

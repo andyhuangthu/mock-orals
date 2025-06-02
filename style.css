@@ -219,7 +219,7 @@ div.container-fluid > div {
     min-width: 400px;
 }
 
-.auth-container h2 {
+.auth-container h1 {
     margin-top: 0;
     margin-bottom: 10px;
 }
@@ -281,6 +281,10 @@ div.container-fluid > div {
     gap: 10px;
     width: 100%;
     font-size: 14px;
+}
+
+.auth-container .submit-btn {
+    font-size: 18px;
 }
 
 .or-ctr {
