@@ -28,7 +28,7 @@ permalink: /duos/
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
           integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 
 
     <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
@@ -39,7 +39,7 @@ permalink: /duos/
     <!-- Firebase SDK -->
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
-    <script src="duos.js" type="module"></script>
+    <script src="../duos.js" type="module"></script>
     <script src="https://kit.fontawesome.com/06b44fd96d.js" crossorigin="anonymous"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -705,7 +705,7 @@ permalink: /duos/
         if (originalSeconds < 10) {
             originalSeconds = `0${originalSeconds}`
         }
-        var alarm = new Audio("mp3/reverb.mp3")
+        var alarm = new Audio("../mp3/reverb.mp3")
         alarm.loop = false
         var playing = false
         var countdown
