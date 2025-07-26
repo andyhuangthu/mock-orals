@@ -120,8 +120,9 @@
                 max_wpm = Number(valueOf($('#max_wpm'))),
                 attempt, words, wpm;
             let succeed = 0;
-            for (num_passages = 12; num_passages >= 6; num_passages--) {
-                for (attempt = 0; attempt < 1000000; attempt++) {
+            
+            for (attempt = 0; attempt < 1000000; attempt++) {
+                for (num_passages = 12; num_passages >= 6; num_passages--) {
                     let picked = pick(passages, num_passages);
                     words = picked.reduce((total, p) => (total + p.word_count), 0);
                     wpm = words / minutes;
@@ -131,6 +132,9 @@
                         succeed = 1;
                         break;
                     }
+                }
+                if (succeed == 1) {
+                    break;
                 }
             }
 
