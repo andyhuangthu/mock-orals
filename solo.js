@@ -186,6 +186,8 @@ function displayVerses(container, passages) {
                 let min_wpm = Number(valueOf($('#min_wpm'))),
                     max_wpm = Number(valueOf($('#max_wpm')));
                 let attempt, words, wpm, num_passages;
+                let succeed = 0;
+
                 for (attempt = 0; attempt < 1000000; attempt++) {
                     for (num_passages = 12; num_passages >= 6; num_passages--) {
                         let picked = pick(passages, num_passages);
