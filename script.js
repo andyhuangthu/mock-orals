@@ -92,7 +92,7 @@
     function generatePassages() {
         let version = $('#version').val(),
             division = $('#division').val(),
-            minutes = $('#minutes').val();
+            minutes = 8;
 
         $.ajax({
             dataType: 'json',
