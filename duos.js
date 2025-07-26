@@ -373,18 +373,18 @@ function displayVerses(container, passages) {
 
         switch (division) {
             case 'Senior':
-                min_wpm = 130;
-                max_wpm = 150;
+                min_wpm = 150;
+                max_wpm = 170;
                 max_words = 220;
                 break;
             case 'Junior':
-                min_wpm = 115;
-                max_wpm = 130;
+                min_wpm = 130;
+                max_wpm = 150;
                 max_words = 200;
                 break;
             case 'Primary':
-                min_wpm = 90;
-                max_wpm = 115;
+                min_wpm = 110;
+                max_wpm = 130;
                 max_words = 150;
                 break;
             default:
@@ -403,18 +403,18 @@ function displayVerses(container, passages) {
             let division = $(this), min_wpm, max_wpm, max_words;
             switch (division.val()) {
                 case 'Senior':
-                    min_wpm = 130;
-                    max_wpm = 150;
+                    min_wpm = 150;
+                    max_wpm = 170;
                     max_words = 220;
                     break;
                 case 'Junior':
-                    min_wpm = 115;
-                    max_wpm = 130;
+                    min_wpm = 130;
+                    max_wpm = 150;
                     max_words = 200;
                     break;
                 case 'Primary':
-                    min_wpm = 90;
-                    max_wpm = 115;
+                    min_wpm = 110;
+                    max_wpm = 130;
                     max_words = 150;
                     break;
                 default:
