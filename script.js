@@ -99,6 +99,7 @@
         }).done(function (passages) {
             console.log(`received ${passages.length} passages`);
             let max_words = Number(valueOf($('#max_words')));
+            let minutes = Number(valueOf($('#minutes')));
             if (!isNaN(max_words)) {
                 passages = passages.filter(passage => (passage.word_count <= max_words));
                 console.log(`${passages.length} passages remaining after filtering those with greater than ${max_words} words`);
@@ -110,7 +111,7 @@
             for (attempt = 0; attempt < 1000000; attempt++) {
                 let picked = pick(passages, 12);
                 words = picked.reduce((total, p) => (total + p.word_count), 0);
-                wpm = words / 8;
+                wpm = words / minutes;
                 if (min_wpm <= wpm && wpm <= max_wpm) {
                     console.log(`words = ${words}, wpm = ${wpm}`)
                     passages = picked;
