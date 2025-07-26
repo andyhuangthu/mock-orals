@@ -145,6 +145,17 @@ function displayVerses(container, passages) {
             }
         });
 
+        $('#minutes').change(function () {
+            let minutes = Number(valueOf($(this)));
+            if (isNaN(minutes) || minutes < 4) {
+                $('#minutes_group').addClass('has-error');
+                formValid(false);
+            } else {
+                $('#minutes_group').removeClass('has-error');
+                formValid();
+            }
+        });
+
         $('.form-control').trigger('change');
 
         $('#generate, #generate-btn').click(() => {
@@ -166,6 +177,7 @@ function displayVerses(container, passages) {
             .then(passages => {
                 console.log(`received ${passages.length} passages`);
                 let max_words = Number(valueOf($('#max_words')));
+                let minutes = Number(valueOf($('#minutes')));
                 if (!isNaN(max_words)) {
                     passages = passages.filter(passage => passage.word_count <= max_words);
                     console.log(`${passages.length} passages remaining after filtering`);
@@ -175,16 +187,22 @@ function displayVerses(container, passages) {
                     max_wpm = Number(valueOf($('#max_wpm')));
                 let attempt, words, wpm;
                 for (attempt = 0; attempt < 1000000; attempt++) {
-                    let picked = pick(passages, 12);
-                    words = picked.reduce((total, p) => total + p.word_count, 0);
-                    wpm = words / 8;
-                    if (min_wpm <= wpm && wpm <= max_wpm) {
-                        console.log(`words = ${words}, wpm = ${wpm}`);
-                        passages = picked;
+                    for (num_passages = 12; num_passages >= 6; num_passages--) {
+                        let picked = pick(passages, num_passages);
+                        words = picked.reduce((total, p) => (total + p.word_count), 0);
+                        wpm = words / minutes;
+                        if (min_wpm <= wpm && wpm <= max_wpm) {
+                            console.log(`words = ${words}, wpm = ${wpm}`)
+                            passages = picked;
+                            succeed = 1;
+                            break;
+                        }
+                    }
+                    if (succeed == 1) {
                         break;
                     }
                 }
-                if (attempt >= 1000000) {
+                if (succeed == 0) {
                     $('#passages').html('<span class="text-danger">Maximum attempts reached. Please adjust parameters and try again.</span>');
                     $('#generate').prop('disabled', false);
                     return;
