@@ -469,18 +469,27 @@ function displayVerses(container, passages) {
                 let min_wpm = Number(valueOf($('#min_wpm'))),
                     max_wpm = Number(valueOf($('#max_wpm')));
                 let attempt, words, wpm;
+                let succeed = 0;
+            
                 for (attempt = 0; attempt < 1000000; attempt++) {
-                    let picked = pick(passages, 12);
-                    words = picked.reduce((total, p) => total + p.word_count, 0);
-                    wpm = words / 8;
-                    if (min_wpm <= wpm && wpm <= max_wpm) {
-                        // console.log(`words = ${words}, wpm = ${wpm}`);
-                        passages = picked;
+                    for (num_passages = 12; num_passages >= 6; num_passages--) {
+                        let picked = pick(passages, num_passages);
+                        words = picked.reduce((total, p) => (total + p.word_count), 0);
+                        wpm = words / minutes;
+                        if (min_wpm <= wpm && wpm <= max_wpm) {
+                            console.log(`words = ${words}, wpm = ${wpm}`)
+                            passages = picked;
+                            succeed = 1;
+                            break;
+                        }
+                    }
+                    if (succeed == 1) {
                         break;
                     }
                 }
-                if (attempt >= 1000000) {
-                    $('#passages').html('<span class="text-danger">Maximum attempts reached. Please adjust parameters and try again.</span>');
+    
+                if (succeed == 0) {
+                    $('#passages-ctr').html($('<span class="text-danger">Maximum attempts reached. Please adjust parameters and try again.</span>'));
                     $('#generate').prop('disabled', false);
                     return;
                 }
