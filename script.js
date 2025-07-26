@@ -120,7 +120,12 @@
                 max_wpm = Number(valueOf($('#max_wpm'))),
                 attempt, words, wpm;
             for (attempt = 0; attempt < 1000000; attempt++) {
-                let picked = pick(passages, 12);
+                // Pick a random number of passages, anywhere between 6 to 12.
+                const minPassages = 6;
+                const maxPassages = 12;
+                // Generate a random integer between minPassages and maxPassages, inclusive.
+                let numberOfPassagesToPick = Math.floor(Math.random() * (maxPassages - minPassages + 1)) + minPassages;
+                let picked = pick(passages, numberOfPassagesToPick);
                 words = picked.reduce((total, p) => (total + p.word_count), 0);
                 wpm = words / minutes;
                 if (min_wpm <= wpm && wpm <= max_wpm) {
