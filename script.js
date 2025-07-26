@@ -74,6 +74,17 @@
             }
         });
 
+        $('#minutes').change(function () {
+            let minutes = Number(valueOf($(this)));
+            if (isNaN(minutes) || minutes < 4) {
+                $('#minutes_group').addClass('has-error');
+                formValid(false);
+            } else {
+                $('#minutes_group').removeClass('has-error');
+                formValid();
+            }
+        });
+
         $('.form-control').trigger('change');
 
         $('#generate').click(function () {
